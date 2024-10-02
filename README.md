@@ -7,10 +7,10 @@ This project focuses on identifying transposable elements (TEs) that are misiden
 ```bash
 git clone https://github.com/Flymetothemoon93/FPIdentifier.git
 
-2.Install required Python packages:
+2. Install required Python packages:
 pip install -r requirements.txt
 
-3.Prepare your input protein sequence file in FASTA format.
+3. Prepare your input protein sequence file in FASTA format.
 
-4.Run the tool with your input file:
+4. Run the tool with your input file:
 python src/main.py --input your_protein_sequences.fasta --output results/
