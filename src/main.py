@@ -29,7 +29,16 @@ def main():
         return
     
     # Step 2: Create output directory if not exists
-    create_output_directory(output_dir)
+    def create_output_directory(directory_path):
+    """
+    Creates the output directory if it doesn't exist. 
+    If it already exists, this function does nothing.
+    """
+    if not os.path.exists(directory_path):
+        os.makedirs(directory_path)
+        print(f"Output directory created: {directory_path}")
+    else:
+        print(f"Output directory already exists: {directory_path}")
 
     # Step 3: Load the protein sequences
     print_status("Loading protein sequences")
