@@ -17,8 +17,18 @@ def run_hmmer(protein_sequences, output_dir):
     hmm_model_dir = 'database/GyDB'
     output_file = os.path.join(output_dir, 'hmmer_results.txt') 
 
+    # Ensure that hmmpress has been applied to the HMM files
+    for hmm_file in os.listdir(hmm_model_dir):
+        if hmm_file.endswith(".hmm"):
+            hmm_file_path = os.path.join(hmm_model_dir, hmm_file)
+            try:
+                print(f"Running hmmpress on {hmm_file_path}")
+                subprocess.run(f"hmmpress {hmm_file_path}", shell=True, check=True)
+            except subprocess.CalledProcessError as e:
+                raise RuntimeError(f"hmmpress failed on {hmm_file_path} with error: {e}")
+
     # Construct the HMMER command
-    cmd = f"hmmscan --domtblout {output_file} database/GyDB {protein_sequences}"
+    cmd = f"hmmscan --domtblout {output_file} {hmm_model_dir}/*.hmm {protein_sequences}"
 
     # Information prompt: Start running HMMER
     print(f"Running HMMER on {protein_sequences} using models from {hmm_model_dir}...")
