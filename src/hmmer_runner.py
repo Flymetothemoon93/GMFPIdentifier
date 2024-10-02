@@ -1,7 +1,7 @@
 import subprocess
 
 def run_hmmer(protein_sequences, output_dir):
-    hmm_model = 'data/rexdb/rexdb.hmm'  # 假设 HMM 模型路径
+    hmm_model = 'database/rexdb/rexdb.hmm'  # 假设 HMM 模型路径
     output_file = f'{output_dir}/hmmer_results.txt'
 
     # 构建 HMMER 命令
