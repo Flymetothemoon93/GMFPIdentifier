@@ -18,7 +18,7 @@ def run_hmmer(protein_sequences, output_dir):
     output_file = os.path.join(output_dir, 'hmmer_results.txt') 
 
     # Construct the HMMER command
-    cmd = f"hmmscan --domtblout {output_file} {hmm_model_dir}/*.hmm {protein_sequences}"
+    cmd = f"hmmscan --domtblout {output_file} database/GyDB/*.hmm {protein_sequences}"
 
     # Information prompt: Start running HMMER
     print(f"Running HMMER on {protein_sequences} using models from {hmm_model_dir}...")
