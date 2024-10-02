@@ -6,18 +6,18 @@ from utils import check_file_exists, create_output_directory, print_status, vali
 
 def main():
     """
-    Main function to run the FPIdentifier pipeline using command-line arguments.
+    Main function to run the FPIdentifier pipeline.
     """
 
     # Set up argument parsing
     parser = argparse.ArgumentParser(description="Run FPIdentifier to scan protein sequences using HMMER and GyDB.")
     parser.add_argument('--input', required=True, help="Path to the input FASTA file with protein sequences.")
-    parser.add_argument('--output', required=True, help="Directory to save the output files.")
+    parser.add_argument('--output', required=True, help="Directory or file to save the output results.")
     
     # Parse arguments
     args = parser.parse_args()
     input_protein_file = args.input
-    output_dir = args.output
+    output_path = args.output
 
     # Step 1: Check input file and validate
     try:
@@ -28,17 +28,15 @@ def main():
         print(f"Error: {e}")
         return
     
-    # Step 2: Create output directory if not exists
-    def create_output_directory(directory_path):
-    """
-    Creates the output directory if it doesn't exist. 
-    If it already exists, this function does nothing.
-    """
-    if not os.path.exists(directory_path):
-        os.makedirs(directory_path)
-        print(f"Output directory created: {directory_path}")
+    # Step 2: Handle output path (can be file or directory)
+    if output_path.endswith('.txt'):
+        output_file = output_path
+        output_dir = os.path.dirname(output_file) or "."
     else:
-        print(f"Output directory already exists: {directory_path}")
+        output_dir = output_path
+        output_file = os.path.join(output_dir, "hmmer_results.txt")
+    
+    create_output_directory(output_dir)
 
     # Step 3: Load the protein sequences
     print_status("Loading protein sequences")
@@ -46,15 +44,15 @@ def main():
     print(f"Loaded {len(protein_sequences)} protein sequences.")
     
     # Step 4: Optionally save the loaded sequences for verification
-    output_fasta = os.path.join(output_dir, "saved_input_sequences.fasta")
-    save_sequences_to_fasta(protein_sequences, output_fasta)
+    saved_fasta = os.path.join(output_dir, "saved_input_sequences.fasta")
+    save_sequences_to_fasta(protein_sequences, saved_fasta)
 
     # Step 5: Run HMMER to scan the sequences against GyDB models
     print_status("Running HMMER")
-    run_hmmer(input_protein_file, output_dir)
+    run_hmmer(input_protein_file, output_file)
     
     # Final status update
-    print_status("HMMER scan completed. Check the output directory for results.")
+    print_status(f"HMMER scan completed. Check the output: {output_file}")
 
 if __name__ == "__main__":
     main()
