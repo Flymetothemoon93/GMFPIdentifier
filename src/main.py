@@ -1,38 +1,51 @@
 import argparse
 import os
+from data_loader import load_protein_sequences, save_sequences_to_fasta
 from hmmer_runner import run_hmmer
-from data_loader import load_sequences
-from utils import create_output_dir
+from utils import check_file_exists, create_output_directory, print_status, validate_fasta_format
 
 def main():
-    # 设置命令行参数解析器
-    parser = argparse.ArgumentParser(description="Run FPIdentifier Tool to detect transposons misidentified as genes.")
-    parser.add_argument('--input', required=True, help="Path to input protein sequences in FASTA format")
-    parser.add_argument('--output', required=True, help="Directory to store output results")
+    """
+    Main function to run the FPIdentifier pipeline using command-line arguments.
+    """
+
+    # Set up argument parsing
+    parser = argparse.ArgumentParser(description="Run FPIdentifier to scan protein sequences using HMMER and GyDB.")
+    parser.add_argument('--input', required=True, help="Path to the input FASTA file with protein sequences.")
+    parser.add_argument('--output', required=True, help="Directory to save the output files.")
+    
+    # Parse arguments
     args = parser.parse_args()
+    input_protein_file = args.input
+    output_dir = args.output
 
-    # 检查输入文件是否存在
-    if not os.path.isfile(args.input):
-        print(f"Error: Input file '{args.input}' does not exist.")
-        return
-
-    # 创建或确认输出目录存在
-    create_output_dir(args.output)
-
-    # 加载蛋白质序列并捕获潜在的错误
+    # Step 1: Check input file and validate
     try:
-        protein_sequences = load_sequences(args.input)
-        print(f"Successfully loaded {len(protein_sequences)} sequences from {args.input}")
-    except Exception as e:
-        print(f"Error loading sequences: {e}")
+        print_status("Validating input file")
+        check_file_exists(input_protein_file)
+        validate_fasta_format(input_protein_file)
+    except (FileNotFoundError, ValueError) as e:
+        print(f"Error: {e}")
         return
+    
+    # Step 2: Create output directory if not exists
+    create_output_directory(output_dir)
 
-    # 运行 HMMER 进行比对
-    try:
-        run_hmmer(protein_sequences, args.output)
-        print(f"Results saved to: {args.output}")
-    except Exception as e:
-        print(f"Error running HMMER: {e}")
+    # Step 3: Load the protein sequences
+    print_status("Loading protein sequences")
+    protein_sequences = load_protein_sequences(input_protein_file)
+    print(f"Loaded {len(protein_sequences)} protein sequences.")
+    
+    # Step 4: Optionally save the loaded sequences for verification
+    output_fasta = os.path.join(output_dir, "saved_input_sequences.fasta")
+    save_sequences_to_fasta(protein_sequences, output_fasta)
+
+    # Step 5: Run HMMER to scan the sequences against GyDB models
+    print_status("Running HMMER")
+    run_hmmer(input_protein_file, output_dir)
+    
+    # Final status update
+    print_status("HMMER scan completed. Check the output directory for results.")
 
 if __name__ == "__main__":
     main()
