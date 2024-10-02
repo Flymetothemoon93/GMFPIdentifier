@@ -20,13 +20,8 @@ def check_file_exists(file_path):
 
 def create_output_directory(directory_path):
     """
-    Creates the output directory if it doesn't exist.
-    
-    Parameters:
-    - directory_path (str): Path to the output directory.
-    
-    Returns:
-    - None
+    Creates the output directory if it doesn't exist. 
+    If it already exists, this function does nothing.
     """
     if not os.path.exists(directory_path):
         os.makedirs(directory_path)
