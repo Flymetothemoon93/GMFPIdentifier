@@ -21,6 +21,13 @@ def run_hmmer(protein_sequences, output_dir):
     for hmm_file in os.listdir(hmm_model_dir):
         if hmm_file.endswith(".hmm"):
             hmm_file_path = os.path.join(hmm_model_dir, hmm_file)
+            # Delete existing HMMER index files if they exist
+            for ext in [".h3f", ".h3i", ".h3m", ".h3p"]:
+                index_file = hmm_file_path + ext
+                if os.path.exists(index_file):
+                    os.remove(index_file)
+                    print(f"Deleted old index file: {index_file}")
+        
             try:
                 print(f"Running hmmpress on {hmm_file_path}")
                 subprocess.run(f"hmmpress {hmm_file_path}", shell=True, check=True)
