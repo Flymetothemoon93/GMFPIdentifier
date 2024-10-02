@@ -14,7 +14,7 @@ def run_hmmer(protein_sequences, output_dir):
     """
     
     # Define the HMM model directory
-    hmm_model_dir = 'database/Gydb'
+    hmm_model_dir = 'database/GyDB'
     output_file = os.path.join(output_dir, 'hmmer_results.txt') 
 
     # Construct the HMMER command
