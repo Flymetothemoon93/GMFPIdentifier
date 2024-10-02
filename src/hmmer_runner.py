@@ -62,6 +62,19 @@ def run_hmmer(protein_sequences, output_dir):
     # Information prompt: Finished running
     print(f"HMMER process for {protein_sequences} finished.")
 
+    # Add more debug output
+    for hmm_file in os.listdir(hmm_model_dir):
+        if hmm_file.endswith('.hmm'):
+            current_hmm_path = os.path.join(hmm_model_dir, hmm_file)
+            print(f"Processing HMM file: {current_hmm_path}")
+            cmd = f"hmmscan --domtblout {output_file} {current_hmm_path} {protein_sequences}"
+            try:
+            subprocess.run(cmd, shell=True, check=True)
+            print(f"Completed HMM file: {current_hmm_path}")
+            except subprocess.CalledProcessError as e:
+                raise RuntimeError(f"HMMER failed with error: {e}")
+
+
 
 # Example of how to run the function
 if __name__ == "__main__":
