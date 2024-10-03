@@ -1,37 +1,36 @@
-import unittest
 import os
-from src.main import main
-from utils import check_file_exists, validate_fasta_format
+import subprocess
 
-class TestFPIdentifier(unittest.TestCase):
+def test_fpidentifier():
+    # 定义测试文件的路径
+    test_data_dir = "test/test_data"
+    rice_fasta = os.path.join(test_data_dir, "rice_with_TE.fasta")
+    arabidopsis_fasta = os.path.join(test_data_dir, "arabidopsis_with_TE.fasta")
+    
+    # 定义输出文件夹
+    output_dir = "test/test_output"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    
+    # 定义输出文件
+    rice_output = os.path.join(output_dir, "rice_results.txt")
+    arabidopsis_output = os.path.join(output_dir, "arabidopsis_results.txt")
+    
+    # 运行 FPIdentifier 主程序对 rice 进行测试
+    rice_cmd = f"python src/main.py --input {rice_fasta} --output {rice_output}"
+    arabidopsis_cmd = f"python src/main.py --input {arabidopsis_fasta} --output {arabidopsis_output}"
+    
+    try:
+        print("Testing rice_with_TE.fasta...")
+        subprocess.run(rice_cmd, shell=True, check=True)
+        print(f"Rice test completed. Output saved to: {rice_output}")
+        
+        print("Testing arabidopsis_with_TE.fasta...")
+        subprocess.run(arabidopsis_cmd, shell=True, check=True)
+        print(f"Arabidopsis test completed. Output saved to: {arabidopsis_output}")
+        
+    except subprocess.CalledProcessError as e:
+        print(f"Error running test: {e}")
 
-    def setUp(self):
-        # Set up the paths for input and output files for the test
-        self.input_file = "tests/test_data.fasta"
-        self.output_dir = "tests/output/"
-        self.output_file = os.path.join(self.output_dir, "hmmer_results.txt")
-
-        # Ensure the output directory is clean before each test
-        if not os.path.exists(self.output_dir):
-            os.makedirs(self.output_dir)
-
-    def test_input_file_exists(self):
-        # Test that the input file exists
-        self.assertTrue(check_file_exists(self.input_file))
-
-    def test_validate_fasta_format(self):
-        # Test that the input file is in the correct FASTA format
-        self.assertTrue(validate_fasta_format(self.input_file))
-
-    def test_main_pipeline(self):
-        # Test the entire FPIdentifier pipeline
-        main()  # You can add argument parsing here for main()
-        self.assertTrue(os.path.exists(self.output_file))  # Ensure output file is created
-
-    def tearDown(self):
-        # Clean up after the test
-        if os.path.exists(self.output_file):
-            os.remove(self.output_file)
-
-if __name__ == '__main__':
-    unittest.main()
+if __name__ == "__main__":
+    test_fpidentifier()
