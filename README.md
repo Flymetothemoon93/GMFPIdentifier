@@ -1,5 +1,5 @@
 # FPIdentifier
-This project focuses on identifying transposable elements (TEs) that are misidentified as genes in genomic annotations. The tool uses **HMMER** to compare protein sequences against the **REXdb** database and detects potential transposon-related domains.
+This project focuses on identifying transposable elements (TEs) that are misidentified as genes in genomic annotations. The tool uses **HMMER** to compare protein sequences against the **GyDB** database and detects potential transposon-related domains.
 
 ## How to Use
 
