@@ -49,7 +49,7 @@ def parse_hmmer_results(hmmer_output, output_file, e_value_threshold=1e-5):
                 continue  # Ensure line has enough fields
             
             domain = fields[0]       # Domain from HMMER result
-            e_value = float(fields[4])  # E-value from HMMER result
+            e_value = float(fields[6])  # E-value from HMMER result
             protein_id = fields[3]   # Protein ID
 
             # Check if domain is in known TE domains and passes E-value threshold
