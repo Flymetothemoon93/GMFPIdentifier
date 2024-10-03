@@ -14,10 +14,14 @@ def load_all_hmm_domains(hmm_dir):
     - None: Populates the global TE_DOMAINS set.
     """
     global TE_DOMAINS
+    if not os.path.exists(hmm_dir):
+        raise FileNotFoundError(f"The directory {hmm_dir} does not exist.")
+    
     for hmm_file in os.listdir(hmm_dir):
         if hmm_file.endswith(".hmm"):
             domain_name = hmm_file.split('.')[0]  # Use filename as domain
             TE_DOMAINS.add(domain_name)
+    print(f"Loaded TE domains from {hmm_dir}: {TE_DOMAINS}")
 
 def parse_hmmer_results(hmmer_output, output_file, e_value_threshold=1e-5):
     """
@@ -31,6 +35,9 @@ def parse_hmmer_results(hmmer_output, output_file, e_value_threshold=1e-5):
     Returns:
     - None
     """
+    if not os.path.exists(hmmer_output):
+        raise FileNotFoundError(f"HMMER results file {hmmer_output} not found.")
+    
     with open(hmmer_output, 'r') as infile, open(output_file, 'w') as outfile:
         outfile.write("Protein ID\tDomain\tE-value\n")
         for line in infile:
@@ -48,7 +55,8 @@ def parse_hmmer_results(hmmer_output, output_file, e_value_threshold=1e-5):
             # Check if domain is in known TE domains and passes E-value threshold
             if domain in TE_DOMAINS and e_value <= e_value_threshold:
                 outfile.write(f"{protein_id}\t{domain}\t{e_value}\n")
-    
+                print(f"Detected TE protein: {protein_id}, Domain: {domain}, E-value: {e_value}")
+
     print(f"Filtered results saved to {output_file}")
 
 # Example usage:
