@@ -3,7 +3,6 @@ import os
 from data_loader import load_protein_sequences, save_sequences_to_fasta
 from hmmer_runner import run_hmmer
 from utils import check_file_exists, create_output_directory, print_status, validate_fasta_format
-from detect_te_proteins import parse_hmmer_results, load_all_hmm_domains
 
 def main():
     """
@@ -52,18 +51,8 @@ def main():
     print_status("Running HMMER")
     run_hmmer(input_protein_file, output_file)
     
-    # Step 6: Load all TE-related domains from GyDB
-    print_status("Loading TE-related domains from GyDB")
-    hmm_model_dir = 'database/GyDB'
-    load_all_hmm_domains(hmm_model_dir)
-
-    # Step 7: Parse HMMER results and detect TE proteins
-    print_status("Parsing HMMER results to detect TE proteins")
-    filtered_output_file = os.path.join(output_dir, "filtered_te_results.txt")
-    parse_hmmer_results(output_file, filtered_output_file)
-
     # Final status update
-    print_status(f"HMMER scan and TE detection completed. Check the filtered TE results in: {filtered_output_file}")
-
+    print_status(f"HMMER scan completed. Check the results in: {output_file}")
+  
 if __name__ == "__main__":
     main()
