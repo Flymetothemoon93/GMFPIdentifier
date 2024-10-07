@@ -3,6 +3,7 @@ import os
 from data_loader import load_protein_sequences, save_sequences_to_fasta
 from hmmer_runner import run_hmmer
 from utils import check_file_exists, create_output_directory, print_status, validate_fasta_format
+from hmmer_results_parser import parse_hmmer_results
 
 def main():
     """
@@ -45,8 +46,13 @@ def main():
     print_status("Running HMMER")  # Print status message
     run_hmmer(input_protein_file, output_file)  # Run HMMER and save results to the output file
     
+    # Step 6: Parse and filter HMMER results based on E-value
+    print_status("Parsing and filtering HMMER results")
+    parse_hmmer_results(hmmer_output_file, filtered_output_file)
+    
     # Final status update
-    print_status(f"HMMER scan completed. Check the results in: {output_file}")  # Inform the user that the scan is complete
-  
+    print_status(f"Pipeline completed. Filtered results saved to: {filtered_output_file}")
+
+
 if __name__ == "__main__":
-    main()  # If the script is run as the main program, call the main() function
+    main()
