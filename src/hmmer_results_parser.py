@@ -1,5 +1,3 @@
-import os
-
 def parse_hmmer_results(hmmer_results_file, output_file, e_value_threshold=1e-5):
     """
     Parses HMMER output file and filters based on E-value.
@@ -38,14 +36,3 @@ def parse_hmmer_results(hmmer_results_file, output_file, e_value_threshold=1e-5)
         print(f"Error: The file {hmmer_results_file} was not found.")
     except Exception as e:
         print(f"An error occurred: {e}")
-
-def main():
-    # Define the input and output file paths
-    hmmer_results_file = "hmmer_results.txt"  # Input file path from HMMER
-    output_file = "parsed_hmmer_results.txt"  # Output file for filtered results
-
-    # Call the function to parse and filter the HMMER results
-    parse_hmmer_results(hmmer_results_file, output_file)
-
-if __name__ == "__main__":
-    main()
