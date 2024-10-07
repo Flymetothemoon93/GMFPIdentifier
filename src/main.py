@@ -65,7 +65,7 @@ def main():
     print_status("Comparing TE proteins with gene annotations")
     compare_with_annotations(bed_output_file, annotation_file, output_dir)
     
-    # Final status update
+    # Final status
     print_status(f"Pipeline completed. Gene overlap results saved to: {os.path.join(output_dir, 'te_gene_overlaps.bed')}")
 
 
