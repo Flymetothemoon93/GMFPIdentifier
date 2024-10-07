@@ -1,26 +1,25 @@
 import subprocess
 import os
 
-def run_hmmer(protein_sequences, output_dir):
+def run_hmmer(protein_sequences, output_file):
     """
     Runs the HMMER tool to scan the provided protein sequences using HMM models from GyDB.
     
     Parameters:
     - protein_sequences (str): Path to the input protein sequences in FASTA format.
-    - output_dir (str): Directory where the results should be saved.
+    - output_file (str): Path where the hmmer_results.txt should be saved.
     
     Returns:
-    - None: Outputs the results to a file in the output directory.
+    - None: Outputs the results to a file in the specified output path.
     """
 
     # Define the HMM model directory
     hmm_model_dir = 'database/GyDB'
-    output_file = os.path.join(output_dir, 'hmmer_results.txt')
 
-    # Ensure the output directory exists
+    # Ensure the output directory exists (from the file path)
+    output_dir = os.path.dirname(output_file)
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-        print(f"Created output directory: {output_dir}")
 
     # Iterate through all .hmm files in the GyDB directory and run hmmpress first
     for hmm_file in os.listdir(hmm_model_dir):
@@ -38,7 +37,7 @@ def run_hmmer(protein_sequences, output_dir):
                 except subprocess.CalledProcessError as e:
                     raise RuntimeError(f"hmmpress failed with error: {e}")
 
-    # Open the output file for appending the results
+    # Open the output file for writing results
     with open(output_file, 'w') as f_out:
         # Iterate through all .hmm files again to run hmmscan
         for hmm_file in os.listdir(hmm_model_dir):
