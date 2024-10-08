@@ -4,7 +4,8 @@ from data_loader import load_protein_sequences, save_sequences_to_fasta
 from hmmer_runner import run_hmmer
 from utils import check_file_exists, create_output_directory, print_status, validate_fasta_format
 from hmmer_results_parser import parse_hmmer_results
-from annotation_comparison import convert_to_bed, compare_with_annotations  # Updated imports
+from annotation_comparison import convert_to_bed, compare_with_annotations
+from validation_summary import generate_report_and_statistics
 
 def main():
     """
@@ -65,8 +66,16 @@ def main():
     print_status("Comparing TE proteins with gene annotations")
     compare_with_annotations(bed_output_file, annotation_file, output_dir)
     
+    # Step 8: Generate validation summary report and statistics
+    print_status("Generating validation summary report and statistics")
+    report_file = os.path.join(output_dir, "FPIdentifier.report.txt")
+    statistics_file = os.path.join(output_dir, "FPIdentifier.statistics.txt")
+    generate_report_and_statistics(output_dir, report_file, statistics_file)
+    
     # Final status
     print_status(f"Pipeline completed. Gene overlap results saved to: {os.path.join(output_dir, 'te_gene_overlaps.bed')}")
+    print_status(f"Validation summary report saved to: {report_file}")
+    print_status(f"Statistics file saved to: {statistics_file}")
 
 
 if __name__ == "__main__":
