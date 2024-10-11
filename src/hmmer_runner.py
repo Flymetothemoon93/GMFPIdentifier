@@ -4,7 +4,7 @@ import re
 
 def extract_contig_name(fasta_file):
     """
-    Extracts the contig or chromosome name from the input FASTA file by parsing 'chr=' field in the header.
+    Extracts the contig or chromosome name from the input FASTA file by parsing the 'chr=' field in the header.
     
     Parameters:
     - fasta_file (str): Path to the input FASTA file.
@@ -38,8 +38,6 @@ def run_hmmer(protein_sequences, output_file):
     if contig_name is None:
         raise ValueError(f"Unable to extract contig name from {protein_sequences}")
     
-    print(f"Extracted contig name: {contig_name}")
-    
     # Define the HMM model directory
     hmm_model_dir = 'database/GyDB'
 
@@ -50,7 +48,7 @@ def run_hmmer(protein_sequences, output_file):
 
     # Open the output file for writing results
     with open(output_file, 'w') as f_out:
-        # Iterate through all .hmm files again to run hmmscan
+        # Iterate through all .hmm files to run hmmscan
         for hmm_file in os.listdir(hmm_model_dir):
             if hmm_file.endswith('.hmm'):
                 hmm_file_path = os.path.join(hmm_model_dir, hmm_file)
@@ -65,7 +63,7 @@ def run_hmmer(protein_sequences, output_file):
                         # Filter the actual data lines, skipping comments
                         if not line.startswith('#'):
                             fields = line.strip().split()
-                            if len(fields) > 1:  # Ensure the line has enough fields to replace
+                            if len(fields) >= 7:  # Ensure there are enough fields in the result
                                 # Replace the first column (target name) with the extracted contig name
                                 fields[0] = contig_name
                                 # Write the modified result to the output file
@@ -75,3 +73,30 @@ def run_hmmer(protein_sequences, output_file):
                     raise RuntimeError(f"HMMER failed with error: {e}")
     
     print(f"HMMER process for {protein_sequences} finished. Results saved to {output_file}")
+
+def clean_and_format_hmmer_results(input_file, output_file):
+    """
+    Cleans and formats the HMMER results file for better readability.
+
+    Parameters:
+    - input_file (str): Path to the raw HMMER results file.
+    - output_file (str): Path to the formatted results file.
+    
+    Returns:
+    - None
+    """
+    with open(input_file, 'r') as infile, open(output_file, 'w') as outfile:
+        for line in infile:
+            # Skip unnecessary lines
+            if line.startswith('#') or "statistics summary" in line:
+                continue
+            
+            # Split columns based on whitespace and format them
+            fields = line.strip().split()
+            
+            # Ensure the number of fields is consistent and valid
+            if len(fields) >= 7:  # Adjust based on your needs
+                formatted_line = "\t".join(fields)
+                outfile.write(formatted_line + "\n")
+
+    print(f"Formatted results saved to {output_file}")
