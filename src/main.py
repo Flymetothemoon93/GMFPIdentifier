@@ -1,11 +1,12 @@
 import argparse
 import os
 from data_loader import load_protein_sequences, save_sequences_to_fasta
-from hmmer_runner import run_hmmer, extract_contig_name
+from hmmer_runner import run_hmmer
 from utils import check_file_exists, create_output_directory, print_status, validate_fasta_format
 from hmmer_results_parser import parse_hmmer_results
 from annotation_comparison import convert_to_bed, compare_with_annotations
 from validation_summary import generate_report_and_statistics
+from hmmer_runner import extract_contig_name  # 确保这个函数被导入
 
 def main():
     """
@@ -37,23 +38,24 @@ def main():
     # Step 2: Ensure the output directory exists
     create_output_directory(output_dir)
 
-    # Step 3: Extract the contig name
-    contig_name = extract_contig_name(input_protein_file)
-    if contig_name:
-        print(f"Extracted contig name: {contig_name}")
-    else:
-        print("No contig name found.")
-        return
+    # Define the output file paths
+    hmmer_output_file = os.path.join(output_dir, "hmmer_results.txt")  # Automatically generate hmmer_results.txt
+    filtered_output_file = os.path.join(output_dir, "parsed_hmmer_results.txt")
+    bed_output_file = os.path.join(output_dir, "hmmer_results.bed")  # Intermediate BED file for TE proteins
 
-    # Step 4: Load the protein sequences
+    # Step 3: Load the protein sequences
     print_status("Loading protein sequences")
     protein_sequences = load_protein_sequences(input_protein_file)
     print(f"Loaded {len(protein_sequences)} protein sequences.")
     
-    # Step 5: Optionally save the loaded sequences for verification
+    # Step 4: Optionally save the loaded sequences for verification
     saved_fasta = os.path.join(output_dir, "saved_input_sequences.fasta")
     save_sequences_to_fasta(protein_sequences, saved_fasta)
 
+    # Step 5: Extract contig name from input FASTA
+    contig_name = extract_contig_name(input_protein_file)  # 从输入的 FASTA 文件中提取 contig 名称
+    print(f"Extracted contig name: {contig_name}")
+    
     # Step 6: Run HMMER to scan the sequences against GyDB models (pass the extracted contig name)
     print_status("Running HMMER")
     run_hmmer(input_protein_file, hmmer_output_file, contig_name)
