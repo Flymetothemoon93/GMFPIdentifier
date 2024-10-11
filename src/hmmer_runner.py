@@ -10,7 +10,7 @@ def extract_contig_name(fasta_file):
     - fasta_file (str): Path to the input FASTA file.
     
     Returns:
-    - str: Contig or chromosome name extracted from the 'chr=' field in the sequence header.
+    - str: Contig or chromosome name extracted from the first sequence header.
     """
     with open(fasta_file, 'r') as f:
         for line in f:
@@ -20,7 +20,7 @@ def extract_contig_name(fasta_file):
                 if match:
                     contig_name = match.group(1)
                     return contig_name
-    return 'Unknown_contig'  # Return a default if no contig found
+    return None
 
 def run_hmmer(protein_sequences, output_file):
     """
@@ -35,8 +35,8 @@ def run_hmmer(protein_sequences, output_file):
     """
     # Extract contig or chromosome name from the protein sequences file
     contig_name = extract_contig_name(protein_sequences)
-    if contig_name == 'Unknown_contig':
-        print(f"Warning: Unable to extract contig name from {protein_sequences}. Using 'Unknown_contig'.")
+    if contig_name is None:
+        raise ValueError(f"Unable to extract contig name from {protein_sequences}")
     
     print(f"Extracted contig name: {contig_name}")
     
@@ -65,10 +65,11 @@ def run_hmmer(protein_sequences, output_file):
                         # Filter the actual data lines, skipping comments
                         if not line.startswith('#'):
                             fields = line.strip().split()
-                            # Replace the first column (target name) with the extracted contig name
-                            fields[0] = contig_name
-                            # Write the modified result to the output file
-                            f_out.write("\t".join(fields) + "\n")
+                            if len(fields) > 1:  # Ensure the line has enough fields to replace
+                                # Replace the first column (target name) with the extracted contig name
+                                fields[0] = contig_name
+                                # Write the modified result to the output file
+                                f_out.write("\t".join(fields) + "\n")
                     print(f"Completed HMM file: {hmm_file_path}")
                 except subprocess.CalledProcessError as e:
                     raise RuntimeError(f"HMMER failed with error: {e}")
