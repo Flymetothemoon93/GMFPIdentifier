@@ -22,22 +22,18 @@ def extract_contig_name(fasta_file):
                     return contig_name
     return None
 
-def run_hmmer(protein_sequences, output_file):
+def run_hmmer(protein_sequences, output_file, contig_name):
     """
     Runs the HMMER tool to scan the provided protein sequences using HMM models from GyDB.
     
     Parameters:
     - protein_sequences (str): Path to the input protein sequences in FASTA format.
     - output_file (str): Path where the hmmer_results.txt should be saved.
+    - contig_name (str): Contig or chromosome name extracted from the input file.
     
     Returns:
     - None: Outputs the results to a file in the specified output path.
     """
-    # Extract contig or chromosome name from the protein sequences file
-    contig_name = extract_contig_name(protein_sequences)
-    if contig_name is None:
-        raise ValueError(f"Unable to extract contig name from {protein_sequences}")
-    
     # Define the HMM model directory
     hmm_model_dir = 'database/GyDB'
 
