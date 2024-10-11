@@ -2,31 +2,34 @@ import subprocess
 import os
 import re
 
-def extract_contig_name_from_hmmer_result(query_name, fasta_file):
+def extract_contig_mapping(fasta_file):
     """
-    Extracts the contig or chromosome name for a given query name from the input FASTA file by parsing 'chr=' field in the header.
+    Extracts a mapping between query names (protein IDs) and contig/chromosome names
+    from the input FASTA file by parsing 'chr=' field in the header.
     
     Parameters:
-    - query_name (str): The name of the query sequence (from HMMER results).
     - fasta_file (str): Path to the input FASTA file.
     
     Returns:
-    - str: Contig or chromosome name corresponding to the query sequence.
+    - dict: A dictionary mapping query names to contig/chromosome names.
     """
+    contig_mapping = {}
     with open(fasta_file, 'r') as f:
         for line in f:
             if line.startswith('>'):
-                if query_name in line:  # Match the query name in the FASTA header
-                    # Use regex to find the 'chr=' field and extract its value
-                    match = re.search(r'chr=(\S+)', line)
-                    if match:
-                        contig_name = match.group(1)
-                        return contig_name
-    return None
+                # Extract the query name (protein ID)
+                query_name = line.split()[0][1:]  # Remove '>' and take the first part as query name
+                # Use regex to find the 'chr=' field and extract its value
+                match = re.search(r'chr=(\S+)', line)
+                if match:
+                    contig_name = match.group(1)
+                    contig_mapping[query_name] = contig_name
+    return contig_mapping
 
 def run_hmmer(protein_sequences, output_file):
     """
-    Runs the HMMER tool to scan the provided protein sequences using HMM models from GyDB.
+    Runs the HMMER tool to scan the provided protein sequences using HMM models from GyDB,
+    and replaces target names with corresponding contig names based on the input FASTA file.
     
     Parameters:
     - protein_sequences (str): Path to the input protein sequences in FASTA format.
@@ -35,6 +38,11 @@ def run_hmmer(protein_sequences, output_file):
     Returns:
     - None: Outputs the results to a file in the specified output path.
     """
+    # Extract contig mapping from the protein sequences file
+    contig_mapping = extract_contig_mapping(protein_sequences)
+    if not contig_mapping:
+        raise ValueError(f"Unable to extract contig mappings from {protein_sequences}")
+    
     # Define the HMM model directory
     hmm_model_dir = 'database/GyDB'
 
@@ -62,15 +70,14 @@ def run_hmmer(protein_sequences, output_file):
                         # Filter the actual data lines, skipping comments
                         if not line.startswith('#'):
                             fields = line.strip().split()
-                            query_name = fields[3]  # Extract query name (the sequence name from input file)
-                            
-                            # Extract contig name corresponding to this query sequence from the input FASTA
-                            contig_name = extract_contig_name_from_hmmer_result(query_name, protein_sequences)
-                            
-                            # Ensure we have a valid contig name before proceeding
-                            if contig_name:
-                                # Replace the first column (target name) with the extracted contig name
-                                fields[0] = contig_name
+                            if len(fields) > 3:
+                                query_name = fields[3]  # The query name in the 4th column (index 3)
+                                
+                                # Check if the query name is in our contig mapping
+                                if query_name in contig_mapping:
+                                    # Replace the first column (target name) with the corresponding contig name
+                                    fields[0] = contig_mapping[query_name]
+                                
                                 # Write the modified result to the output file
                                 f_out.write("\t".join(fields) + "\n")
                     
