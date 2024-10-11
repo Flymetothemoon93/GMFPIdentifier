@@ -14,14 +14,13 @@ def load_protein_sequences(file_path):
     
     # Use SeqIO to read the FASTA file
     for record in SeqIO.parse(file_path, "fasta"):
-        sequences[record.id] = str(record.seq)
+        sequences[record.description] = str(record.seq)  # Use the full header, not just the ID
     
     # Check if no sequences were loaded
     if not sequences:
         raise ValueError("No sequences were found in the file. Please check if the file is in valid FASTA format.")
     
     return sequences
-
 
 def save_sequences_to_fasta(sequences, output_file):
     """
@@ -38,7 +37,7 @@ def save_sequences_to_fasta(sequences, output_file):
     from Bio.SeqRecord import SeqRecord
     
     # Create SeqRecord objects for each sequence
-    records = [SeqRecord(Seq(seq), id=header, description="") for header, seq in sequences.items()]
+    records = [SeqRecord(Seq(seq), id=header.split()[0], description=header) for header, seq in sequences.items()]  # Keep full header
     
     # Write the SeqRecord objects to a FASTA file
     with open(output_file, 'w') as file:
