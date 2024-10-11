@@ -1,7 +1,7 @@
 import argparse
 import os
 from data_loader import load_protein_sequences, save_sequences_to_fasta
-from hmmer_runner import run_hmmer, clean_and_format_hmmer_results
+from hmmer_runner import run_hmmer
 from utils import check_file_exists, create_output_directory, print_status, validate_fasta_format
 from hmmer_results_parser import parse_hmmer_results
 from annotation_comparison import convert_to_bed, compare_with_annotations
@@ -39,7 +39,6 @@ def main():
 
     # Define the output file paths
     hmmer_output_file = os.path.join(output_dir, "hmmer_results.txt")  # Automatically generate hmmer_results.txt
-    formatted_hmmer_output = os.path.join(output_dir, "hmmer_results_formatted.txt")  # Formatted output file
     filtered_output_file = os.path.join(output_dir, "parsed_hmmer_results.txt")
     bed_output_file = os.path.join(output_dir, "hmmer_results.bed")  # Intermediate BED file for TE proteins
 
@@ -55,23 +54,19 @@ def main():
     # Step 5: Run HMMER to scan the sequences against GyDB models
     print_status("Running HMMER")
     run_hmmer(input_protein_file, hmmer_output_file)
-
-    # Step 6: Clean and format HMMER results
-    print_status("Cleaning and formatting HMMER results")
-    clean_and_format_hmmer_results(hmmer_output_file, formatted_hmmer_output)
     
-    # Step 7: Parse and filter HMMER results based on E-value
+    # Step 6: Parse and filter HMMER results based on E-value
     print_status("Parsing and filtering HMMER results")
-    parse_hmmer_results(formatted_hmmer_output, filtered_output_file)
+    parse_hmmer_results(hmmer_output_file, filtered_output_file)
     
-    # Step 8: Convert parsed results to BED format and compare with annotations
+    # Step 7: Convert parsed results to BED format and compare with annotations
     print_status("Converting parsed results to BED format")
     convert_to_bed(filtered_output_file, bed_output_file)
 
     print_status("Comparing TE proteins with gene annotations")
     compare_with_annotations(bed_output_file, annotation_file, output_dir)
     
-    # Step 9: Generate validation summary report and statistics
+    # Step 8: Generate validation summary report and statistics
     print_status("Generating validation summary report and statistics")
     report_file = os.path.join(output_dir, "FPIdentifier.report.txt")
     statistics_file = os.path.join(output_dir, "FPIdentifier.statistics.txt")
