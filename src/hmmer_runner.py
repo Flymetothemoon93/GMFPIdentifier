@@ -1,6 +1,5 @@
 import subprocess
 import os
-import re
 
 def extract_contig_name(fasta_file):
     """
@@ -15,11 +14,11 @@ def extract_contig_name(fasta_file):
     with open(fasta_file, 'r') as f:
         for line in f:
             if line.startswith('>'):
-                # Use regex to find the 'chr=' field and extract its value
-                match = re.search(r'chr=(\S+)', line)
-                if match:
-                    contig_name = match.group(1)
+                contig_name = line.split()[2]
+                if contig_name.startswith("chr="):
+                    contig_name = contig_name.split("=")[-1]
                     return contig_name
+
     return None
 
 def run_hmmer(protein_sequences, output_file, contig_name):
