@@ -4,37 +4,39 @@ import re
 
 def extract_contig_name(fasta_file):
     """
-    Extracts the contig or chromosome name from the input FASTA file by parsing the header line.
-
+    Extracts the contig or chromosome name from the input FASTA file by parsing 'chr=' field in the header.
+    
     Parameters:
     - fasta_file (str): Path to the input FASTA file.
-
+    
     Returns:
-    - str: Contig or chromosome name extracted from the first sequence header.
+    - str: Contig or chromosome name extracted from the 'chr=' field in the sequence header.
     """
     with open(fasta_file, 'r') as f:
         for line in f:
             if line.startswith('>'):
-                # Here, we extract the first part of the header that contains "contig_xxx"
-                contig_name = line.split()[0].replace(">", "")  # Extract everything after '>'
-                return contig_name
-    return None
+                # Use regex to find the 'chr=' field and extract its value
+                match = re.search(r'chr=(\S+)', line)
+                if match:
+                    contig_name = match.group(1)
+                    return contig_name
+    return 'Unknown_contig'  # Return a default if no contig found
 
 def run_hmmer(protein_sequences, output_file):
     """
     Runs the HMMER tool to scan the provided protein sequences using HMM models from GyDB.
-
+    
     Parameters:
     - protein_sequences (str): Path to the input protein sequences in FASTA format.
     - output_file (str): Path where the hmmer_results.txt should be saved.
-
+    
     Returns:
     - None: Outputs the results to a file in the specified output path.
     """
     # Extract contig or chromosome name from the protein sequences file
     contig_name = extract_contig_name(protein_sequences)
-    if contig_name is None:
-        raise ValueError(f"Unable to extract contig name from {protein_sequences}")
+    if contig_name == 'Unknown_contig':
+        print(f"Warning: Unable to extract contig name from {protein_sequences}. Using 'Unknown_contig'.")
     
     print(f"Extracted contig name: {contig_name}")
     
