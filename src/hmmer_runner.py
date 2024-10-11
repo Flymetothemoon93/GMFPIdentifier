@@ -4,11 +4,11 @@ import re
 
 def extract_contig_name(fasta_file):
     """
-    Extracts the contig or chromosome name from the input FASTA file by parsing the 'chr=' field in the header.
-
+    Extracts the contig or chromosome name from the input FASTA file by parsing 'chr=' field in the header.
+    
     Parameters:
     - fasta_file (str): Path to the input FASTA file.
-
+    
     Returns:
     - str: Contig or chromosome name extracted from the first sequence header.
     """
@@ -25,11 +25,11 @@ def extract_contig_name(fasta_file):
 def run_hmmer(protein_sequences, output_file):
     """
     Runs the HMMER tool to scan the provided protein sequences using HMM models from GyDB.
-
+    
     Parameters:
     - protein_sequences (str): Path to the input protein sequences in FASTA format.
     - output_file (str): Path where the hmmer_results.txt should be saved.
-
+    
     Returns:
     - None: Outputs the results to a file in the specified output path.
     """
@@ -48,10 +48,12 @@ def run_hmmer(protein_sequences, output_file):
 
     # Open the output file for writing results
     with open(output_file, 'w') as f_out:
-        # Iterate through all .hmm files to run hmmscan
+        # Iterate through all .hmm files again to run hmmscan
         for hmm_file in os.listdir(hmm_model_dir):
             if hmm_file.endswith('.hmm'):
                 hmm_file_path = os.path.join(hmm_model_dir, hmm_file)
+                
+                # Print both processing and completed status
                 print(f"Processing HMM file: {hmm_file_path}")
                 
                 # Construct the HMMER command for each HMM file
@@ -63,8 +65,14 @@ def run_hmmer(protein_sequences, output_file):
                         # Filter the actual data lines, skipping comments
                         if not line.startswith('#'):
                             fields = line.strip().split()
-                            # Add contig name as the first column
-                            f_out.write(f"{contig_name}\t" + "\t".join(fields) + "\n")
+                            # Ensure the line has enough fields to replace
+                            if len(fields) > 0:
+                                # Replace the first column (target name) with the extracted contig name
+                                fields[0] = contig_name
+                                # Write the modified result to the output file
+                                f_out.write("\t".join(fields) + "\n")
+                    
+                    # Print completion message
                     print(f"Completed HMM file: {hmm_file_path}")
                 except subprocess.CalledProcessError as e:
                     raise RuntimeError(f"HMMER failed with error: {e}")
