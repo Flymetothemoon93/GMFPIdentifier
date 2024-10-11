@@ -4,7 +4,7 @@ import re
 
 def extract_contig_name(fasta_file):
     """
-    Extracts the contig or chromosome name from the input FASTA file by parsing the 'chr=' field in the header.
+    Extracts the contig or chromosome name from the input FASTA file by parsing 'chr=' field in the header.
     
     Parameters:
     - fasta_file (str): Path to the input FASTA file.
@@ -48,10 +48,13 @@ def run_hmmer(protein_sequences, output_file):
 
     # Open the output file for writing results
     with open(output_file, 'w') as f_out:
-        # Iterate through all .hmm files to run hmmscan
+        # Iterate through all .hmm files again to run hmmscan
         for hmm_file in os.listdir(hmm_model_dir):
             if hmm_file.endswith('.hmm'):
                 hmm_file_path = os.path.join(hmm_model_dir, hmm_file)
+                
+                # Print both processing and completed status
+                print(f"Processing HMM file: {hmm_file_path}")
                 
                 # Construct the HMMER command for each HMM file
                 cmd = f"hmmscan --domtblout /dev/stdout {hmm_file_path} {protein_sequences}"
@@ -62,11 +65,14 @@ def run_hmmer(protein_sequences, output_file):
                         # Filter the actual data lines, skipping comments
                         if not line.startswith('#'):
                             fields = line.strip().split()
-                            if len(fields) > 0:  # Ensure there's data to modify
+                            # Ensure the line has enough fields to replace
+                            if len(fields) > 0:
                                 # Replace the first column (target name) with the extracted contig name
                                 fields[0] = contig_name
-                                # Write the modified result to the output file, maintaining original format
+                                # Write the modified result to the output file
                                 f_out.write("\t".join(fields) + "\n")
+                    
+                    # Print completion message
                     print(f"Completed HMM file: {hmm_file_path}")
                 except subprocess.CalledProcessError as e:
                     raise RuntimeError(f"HMMER failed with error: {e}")
