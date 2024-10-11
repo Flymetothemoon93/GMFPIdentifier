@@ -1,34 +1,36 @@
 import subprocess
 import os
+import re
 
-def extract_contig_name(fasta_file):
+def extract_contig_name_from_hmmer_result(query_name, fasta_file):
     """
-    Extracts the contig or chromosome name from the input FASTA file by parsing 'chr=' field in the header.
+    Extracts the contig or chromosome name for a given query name from the input FASTA file by parsing 'chr=' field in the header.
     
     Parameters:
+    - query_name (str): The name of the query sequence (from HMMER results).
     - fasta_file (str): Path to the input FASTA file.
     
     Returns:
-    - str: Contig or chromosome name extracted from the first sequence header.
+    - str: Contig or chromosome name corresponding to the query sequence.
     """
     with open(fasta_file, 'r') as f:
         for line in f:
             if line.startswith('>'):
-                contig_name = line.split()[2]
-                if contig_name.startswith("chr="):
-                    contig_name = contig_name.split("=")[-1]
-                    return contig_name
-
+                if query_name in line:  # Match the query name in the FASTA header
+                    # Use regex to find the 'chr=' field and extract its value
+                    match = re.search(r'chr=(\S+)', line)
+                    if match:
+                        contig_name = match.group(1)
+                        return contig_name
     return None
 
-def run_hmmer(protein_sequences, output_file, contig_name):
+def run_hmmer(protein_sequences, output_file):
     """
     Runs the HMMER tool to scan the provided protein sequences using HMM models from GyDB.
     
     Parameters:
     - protein_sequences (str): Path to the input protein sequences in FASTA format.
     - output_file (str): Path where the hmmer_results.txt should be saved.
-    - contig_name (str): Contig or chromosome name extracted from the input file.
     
     Returns:
     - None: Outputs the results to a file in the specified output path.
@@ -60,8 +62,13 @@ def run_hmmer(protein_sequences, output_file, contig_name):
                         # Filter the actual data lines, skipping comments
                         if not line.startswith('#'):
                             fields = line.strip().split()
-                            # Ensure the line has enough fields to replace
-                            if len(fields) > 0:
+                            query_name = fields[3]  # Extract query name (the sequence name from input file)
+                            
+                            # Extract contig name corresponding to this query sequence from the input FASTA
+                            contig_name = extract_contig_name_from_hmmer_result(query_name, protein_sequences)
+                            
+                            # Ensure we have a valid contig name before proceeding
+                            if contig_name:
                                 # Replace the first column (target name) with the extracted contig name
                                 fields[0] = contig_name
                                 # Write the modified result to the output file
