@@ -52,7 +52,6 @@ def run_hmmer(protein_sequences, output_file):
         for hmm_file in os.listdir(hmm_model_dir):
             if hmm_file.endswith('.hmm'):
                 hmm_file_path = os.path.join(hmm_model_dir, hmm_file)
-                print(f"Processing HMM file: {hmm_file_path}")
                 
                 # Construct the HMMER command for each HMM file
                 cmd = f"hmmscan --domtblout /dev/stdout {hmm_file_path} {protein_sequences}"
@@ -63,40 +62,13 @@ def run_hmmer(protein_sequences, output_file):
                         # Filter the actual data lines, skipping comments
                         if not line.startswith('#'):
                             fields = line.strip().split()
-                            if len(fields) >= 7:  # Ensure there are enough fields in the result
+                            if len(fields) > 0:  # Ensure there's data to modify
                                 # Replace the first column (target name) with the extracted contig name
                                 fields[0] = contig_name
-                                # Write the modified result to the output file
+                                # Write the modified result to the output file, maintaining original format
                                 f_out.write("\t".join(fields) + "\n")
                     print(f"Completed HMM file: {hmm_file_path}")
                 except subprocess.CalledProcessError as e:
                     raise RuntimeError(f"HMMER failed with error: {e}")
     
     print(f"HMMER process for {protein_sequences} finished. Results saved to {output_file}")
-
-def clean_and_format_hmmer_results(input_file, output_file):
-    """
-    Cleans and formats the HMMER results file for better readability.
-
-    Parameters:
-    - input_file (str): Path to the raw HMMER results file.
-    - output_file (str): Path to the formatted results file.
-    
-    Returns:
-    - None
-    """
-    with open(input_file, 'r') as infile, open(output_file, 'w') as outfile:
-        for line in infile:
-            # Skip unnecessary lines
-            if line.startswith('#') or "statistics summary" in line:
-                continue
-            
-            # Split columns based on whitespace and format them
-            fields = line.strip().split()
-            
-            # Ensure the number of fields is consistent and valid
-            if len(fields) >= 7:  # Adjust based on your needs
-                formatted_line = "\t".join(fields)
-                outfile.write(formatted_line + "\n")
-
-    print(f"Formatted results saved to {output_file}")
