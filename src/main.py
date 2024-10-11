@@ -1,7 +1,7 @@
 import argparse
 import os
 from data_loader import load_protein_sequences, save_sequences_to_fasta
-from hmmer_runner import run_hmmer
+from hmmer_runner import run_hmmer, extract_contig_name
 from utils import check_file_exists, create_output_directory, print_status, validate_fasta_format
 from hmmer_results_parser import parse_hmmer_results
 from annotation_comparison import convert_to_bed, compare_with_annotations
@@ -37,36 +37,39 @@ def main():
     # Step 2: Ensure the output directory exists
     create_output_directory(output_dir)
 
-    # Define the output file paths
-    hmmer_output_file = os.path.join(output_dir, "hmmer_results.txt")  # Automatically generate hmmer_results.txt
-    filtered_output_file = os.path.join(output_dir, "parsed_hmmer_results.txt")
-    bed_output_file = os.path.join(output_dir, "hmmer_results.bed")  # Intermediate BED file for TE proteins
+    # Step 3: Extract the contig name
+    contig_name = extract_contig_name(input_protein_file)
+    if contig_name:
+        print(f"Extracted contig name: {contig_name}")
+    else:
+        print("No contig name found.")
+        return
 
-    # Step 3: Load the protein sequences
+    # Step 4: Load the protein sequences
     print_status("Loading protein sequences")
     protein_sequences = load_protein_sequences(input_protein_file)
     print(f"Loaded {len(protein_sequences)} protein sequences.")
     
-    # Step 4: Optionally save the loaded sequences for verification
+    # Step 5: Optionally save the loaded sequences for verification
     saved_fasta = os.path.join(output_dir, "saved_input_sequences.fasta")
     save_sequences_to_fasta(protein_sequences, saved_fasta)
 
-    # Step 5: Run HMMER to scan the sequences against GyDB models
+    # Step 6: Run HMMER to scan the sequences against GyDB models (pass the extracted contig name)
     print_status("Running HMMER")
-    run_hmmer(input_protein_file, hmmer_output_file)
+    run_hmmer(input_protein_file, hmmer_output_file, contig_name)
     
-    # Step 6: Parse and filter HMMER results based on E-value
+    # Step 7: Parse and filter HMMER results based on E-value
     print_status("Parsing and filtering HMMER results")
     parse_hmmer_results(hmmer_output_file, filtered_output_file)
     
-    # Step 7: Convert parsed results to BED format and compare with annotations
+    # Step 8: Convert parsed results to BED format and compare with annotations
     print_status("Converting parsed results to BED format")
     convert_to_bed(filtered_output_file, bed_output_file)
 
     print_status("Comparing TE proteins with gene annotations")
     compare_with_annotations(bed_output_file, annotation_file, output_dir)
     
-    # Step 8: Generate validation summary report and statistics
+    # Step 9: Generate validation summary report and statistics
     print_status("Generating validation summary report and statistics")
     report_file = os.path.join(output_dir, "FPIdentifier.report.txt")
     statistics_file = os.path.join(output_dir, "FPIdentifier.statistics.txt")
