@@ -6,7 +6,6 @@ from utils import check_file_exists, create_output_directory, print_status, vali
 from hmmer_results_parser import parse_hmmer_results
 from annotation_comparison import convert_to_bed, compare_with_annotations
 from validation_summary import generate_report_and_statistics
-from hmmer_runner import extract_contig_name  # 确保这个函数被导入
 
 def main():
     """
@@ -52,26 +51,22 @@ def main():
     saved_fasta = os.path.join(output_dir, "saved_input_sequences.fasta")
     save_sequences_to_fasta(protein_sequences, saved_fasta)
 
-    # Step 5: Extract contig name from input FASTA
-    contig_name = extract_contig_name(input_protein_file)  # 从输入的 FASTA 文件中提取 contig 名称
-    print(f"Extracted contig name: {contig_name}")
-    
-    # Step 6: Run HMMER to scan the sequences against GyDB models (pass the extracted contig name)
+    # Step 5: Run HMMER to scan the sequences against GyDB models (now we handle contig name in hmmer_runner.py)
     print_status("Running HMMER")
-    run_hmmer(input_protein_file, hmmer_output_file, contig_name)
+    run_hmmer(input_protein_file, hmmer_output_file)
     
-    # Step 7: Parse and filter HMMER results based on E-value
+    # Step 6: Parse and filter HMMER results based on E-value
     print_status("Parsing and filtering HMMER results")
     parse_hmmer_results(hmmer_output_file, filtered_output_file)
     
-    # Step 8: Convert parsed results to BED format and compare with annotations
+    # Step 7: Convert parsed results to BED format and compare with annotations
     print_status("Converting parsed results to BED format")
     convert_to_bed(filtered_output_file, bed_output_file)
 
     print_status("Comparing TE proteins with gene annotations")
     compare_with_annotations(bed_output_file, annotation_file, output_dir)
     
-    # Step 9: Generate validation summary report and statistics
+    # Step 8: Generate validation summary report and statistics
     print_status("Generating validation summary report and statistics")
     report_file = os.path.join(output_dir, "FPIdentifier.report.txt")
     statistics_file = os.path.join(output_dir, "FPIdentifier.statistics.txt")
