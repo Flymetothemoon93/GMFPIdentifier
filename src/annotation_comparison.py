@@ -3,10 +3,10 @@ import os
 
 def convert_to_bed(hmmer_results_file, bed_output_file):
     """
-    Converts parsed HMMER results to BED format.
+    Converts parsed and modified HMMER results to BED format.
     
     Parameters:
-    - hmmer_results_file (str): Path to the parsed HMMER results file.
+    - hmmer_results_file (str): Path to the HMMER results file where target names have been replaced by contig names.
     - bed_output_file (str): Path to the output BED file.
     
     Returns:
@@ -21,7 +21,7 @@ def convert_to_bed(hmmer_results_file, bed_output_file):
             fields = line.strip().split()
             
             # Extract the relevant fields
-            chromosome = fields[0]  # Chromosome or target name
+            chromosome = fields[0]  # Contig name (which was originally the target name)
             start = fields[15]  # HMM alignment start (hm coord 'from')
             end = fields[16]    # HMM alignment end (hm coord 'to')
             name = fields[3]    # Query name (e.g., protein or TE name)
