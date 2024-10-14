@@ -60,7 +60,7 @@ def main():
     print_status("Parsing and filtering HMMER results")
     parse_hmmer_results(hmmer_output_file, filtered_output_file)
     
-    # Step 7: 替换 target name 为 contig name
+    # Step 7: replace target name with contig name
     print_status("Replacing target name with contig name")
     subprocess.run(["python", "replace_target_name.py", hmmer_output_file, os.path.join(output_dir, "hmmer_results_modified.txt"), input_protein_file])
     
