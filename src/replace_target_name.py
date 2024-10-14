@@ -2,10 +2,10 @@ import re
 
 def replace_target_with_contig(hmmer_results_file, output_file, fasta_file):
     """
-    Replaces the target name in the HMMER results file with the corresponding contig name from the FASTA headers.
+    Replaces the target name in the parsed HMMER results file with the corresponding contig name from the FASTA headers.
 
     Parameters:
-    - hmmer_results_file (str): Path to the HMMER output results (domtblout format).
+    - hmmer_results_file (str): Path to the filtered HMMER results file from hmmer_results_parser.py.
     - output_file (str): Path to save the modified results.
     - fasta_file (str): Path to the input FASTA file containing contig information.
 
@@ -23,7 +23,7 @@ def replace_target_with_contig(hmmer_results_file, output_file, fasta_file):
                     contig_name = match.group(1)
                     query_to_contig[header] = contig_name
 
-    # Step 2: Process the HMMER results and replace the target name
+    # Step 2: Process the parsed HMMER results and replace the target name
     with open(hmmer_results_file, 'r') as infile, open(output_file, 'w') as outfile:
         for line in infile:
             if line.startswith('#'):  # Keep comment lines as is
@@ -47,7 +47,7 @@ def replace_target_with_contig(hmmer_results_file, output_file, fasta_file):
 if __name__ == "__main__":
     import sys
     if len(sys.argv) != 4:
-        print("Usage: python replace_target_name.py <hmmer_results.txt> <output.txt> <input.fasta>")
+        print("Usage: python replace_target_name.py <hmmer_parsed_results.txt> <output.txt> <input.fasta>")
         sys.exit(1)
     
     hmmer_results_file = sys.argv[1]
