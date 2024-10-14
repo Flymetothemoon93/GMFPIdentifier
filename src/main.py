@@ -1,6 +1,7 @@
 import subprocess
 import argparse
 import os
+import time
 from data_loader import load_protein_sequences, save_sequences_to_fasta
 from hmmer_runner import run_hmmer
 from utils import check_file_exists, create_output_directory, print_status, validate_fasta_format
@@ -9,11 +10,23 @@ from replace_target_name import replace_target_with_contig
 from annotation_comparison import convert_to_bed, compare_with_annotations
 from validation_summary import generate_report_and_statistics
 
+def format_time(seconds):
+    """
+    Format the elapsed time in seconds into hours, minutes, and seconds.
+    """
+    hours = seconds // 3600
+    minutes = (seconds % 3600) // 60
+    seconds = seconds % 60
+    return f"{hours} hours, {minutes} minutes, {seconds} seconds"
+
 def main():
     """
     Main function to run the FPIdentifier pipeline, detect TE proteins, and compare with gene annotations.
     """
-
+    
+    # Record the start time
+    start_time = time.time()
+    
     # Set up argument parsing
     parser = argparse.ArgumentParser(description="Run FPIdentifier to scan protein sequences using HMMER and GyDB, and compare with gene annotations.")
     parser.add_argument('--input', required=True, help="Path to the input FASTA file with protein sequences.")
@@ -83,7 +96,14 @@ def main():
     print_status(f"Pipeline completed. Gene overlap results saved to: {os.path.join(output_dir, 'te_gene_overlaps.bed')}")
     print_status(f"Validation summary report saved to: {report_file}")
     print_status(f"Statistics file saved to: {statistics_file}")
-
+    
+    # Record the end time
+    end_time = time.time()
+    
+    elapsed_time = int(end_time - start_time)
+    
+    formatted_time = format_time(elapsed_time)
+    print(f"Total elapsed time: {formatted_time}")
 
 if __name__ == "__main__":
     main()
