@@ -51,7 +51,7 @@ def main():
     saved_fasta = os.path.join(output_dir, "saved_input_sequences.fasta")
     save_sequences_to_fasta(protein_sequences, saved_fasta)
 
-    # Step 5: Run HMMER to scan the sequences against GyDB models (now we handle contig name in hmmer_runner.py)
+    # Step 5: Run HMMER to scan the sequences against GyDB models
     print_status("Running HMMER")
     run_hmmer(input_protein_file, hmmer_output_file)
     
