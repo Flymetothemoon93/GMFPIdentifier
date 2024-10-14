@@ -26,15 +26,15 @@ def replace_target_with_contig(hmmer_results_file, output_file, fasta_file):
     # Step 2: Process the parsed HMMER results and replace the target name
     with open(hmmer_results_file, 'r') as infile, open(output_file, 'w') as outfile:
         for line in infile:
-            if line.startswith('#'):  # Keep comment lines as is
+            if line.startswith('#'):
                 outfile.write(line)
             else:
                 fields = line.strip().split()
                 if len(fields) > 3:
-                    query_name = fields[3]  # Get the query name from the 4th column
+                    query_name = fields[3] 
                     if query_name in query_to_contig:
                         contig_name = query_to_contig[query_name]
-                        fields[0] = contig_name  # Replace the first field with the contig name
+                        fields[0] = contig_name
                     else:
                         print(f"Warning: Query name {query_name} not found in the FASTA file.")
                     outfile.write("\t".join(fields) + "\n")
