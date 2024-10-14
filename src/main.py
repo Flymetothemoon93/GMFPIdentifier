@@ -5,6 +5,7 @@ from data_loader import load_protein_sequences, save_sequences_to_fasta
 from hmmer_runner import run_hmmer
 from utils import check_file_exists, create_output_directory, print_status, validate_fasta_format
 from hmmer_results_parser import parse_hmmer_results
+from replace_target_name import replace_target_with_contig
 from annotation_comparison import convert_to_bed, compare_with_annotations
 from validation_summary import generate_report_and_statistics
 
@@ -42,6 +43,7 @@ def main():
     hmmer_output_file = os.path.join(output_dir, "hmmer_results.txt")  # Automatically generate hmmer_results.txt
     filtered_output_file = os.path.join(output_dir, "parsed_hmmer_results.txt")
     bed_output_file = os.path.join(output_dir, "hmmer_results.bed")  # Intermediate BED file for TE proteins
+    modified_hmmer_file = os.path.join(output_dir, "hmmer_results_modified.txt")  # The file with replaced contig names
 
     # Step 3: Load the protein sequences
     print_status("Loading protein sequences")
@@ -60,13 +62,13 @@ def main():
     print_status("Parsing and filtering HMMER results")
     parse_hmmer_results(hmmer_output_file, filtered_output_file)
     
-    # Step 7: replace target name with contig name
+    # Step 7: Replace target name with contig name from the FASTA file
     print_status("Replacing target name with contig name")
-    subprocess.run(["python", "replace_target_name.py", hmmer_output_file, os.path.join(output_dir, "hmmer_results_modified.txt"), input_protein_file])
+    replace_target_with_contig(filtered_output_file, modified_hmmer_file, input_protein_file)
     
     # Step 8: Convert parsed results to BED format and compare with annotations
     print_status("Converting parsed results to BED format")
-    convert_to_bed(filtered_output_file, bed_output_file)
+    convert_to_bed(modified_hmmer_file, bed_output_file)
 
     print_status("Comparing TE proteins with gene annotations")
     compare_with_annotations(bed_output_file, annotation_file, output_dir)
