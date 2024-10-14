@@ -1,3 +1,4 @@
+import subprocess
 import argparse
 import os
 from data_loader import load_protein_sequences, save_sequences_to_fasta
@@ -59,14 +60,18 @@ def main():
     print_status("Parsing and filtering HMMER results")
     parse_hmmer_results(hmmer_output_file, filtered_output_file)
     
-    # Step 7: Convert parsed results to BED format and compare with annotations
+    # Step 7: 替换 target name 为 contig name
+    print_status("Replacing target name with contig name")
+    subprocess.run(["python", "replace_target_name.py", hmmer_output_file, os.path.join(output_dir, "hmmer_results_modified.txt"), input_protein_file])
+    
+    # Step 8: Convert parsed results to BED format and compare with annotations
     print_status("Converting parsed results to BED format")
     convert_to_bed(filtered_output_file, bed_output_file)
 
     print_status("Comparing TE proteins with gene annotations")
     compare_with_annotations(bed_output_file, annotation_file, output_dir)
     
-    # Step 8: Generate validation summary report and statistics
+    # Step 9: Generate validation summary report and statistics
     print_status("Generating validation summary report and statistics")
     report_file = os.path.join(output_dir, "FPIdentifier.report.txt")
     statistics_file = os.path.join(output_dir, "FPIdentifier.statistics.txt")
