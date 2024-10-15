@@ -1,7 +1,7 @@
 import subprocess
 import os
 
-def run_hmmer(protein_sequences, output_file):
+def run_hmmer(protein_sequences, output_file, e_value_threshold=1e-5):
     """
     Runs the HMMER tool to scan the provided protein sequences using HMM models from GyDB.
     
@@ -51,6 +51,10 @@ def run_hmmer(protein_sequences, output_file):
                     # Run HMMER and append the results to the output file
                     cmd = subprocess.run(cmd, shell=True, capture_output=True)
                     print(f"Completed HMM file: {hmm_file_path}")
+                    for line in cmd.stodut.decode():
+                        #####remember remove！！！！
+                        if float(line.split()[6]) < e_value_threshold:
+                        #####remember remove！！！！
                             output_file.write(line)
                             output_file.flush()
                 except subprocess.CalledProcessError as e:
