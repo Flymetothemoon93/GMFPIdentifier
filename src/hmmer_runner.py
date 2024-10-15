@@ -1,7 +1,7 @@
 import subprocess
 import os
 
-def run_hmmer(protein_sequences, output_file):
+def run_hmmer(protein_sequences, output_file, e_value_threshold=1e-5):
     """
     Runs the HMMER tool to scan the provided protein sequences using HMM models from GyDB.
     
@@ -21,9 +21,6 @@ def run_hmmer(protein_sequences, output_file):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    # Temporary file to store intermediate results
-    temp_output_file = os.path.join(output_dir, "temp_hmmer_results.txt")
-
     # Iterate through all .hmm files in the GyDB directory and run hmmpress first
     for hmm_file in os.listdir(hmm_model_dir):
         if hmm_file.endswith('.hmm'):
@@ -40,29 +37,27 @@ def run_hmmer(protein_sequences, output_file):
                 except subprocess.CalledProcessError as e:
                     raise RuntimeError(f"hmmpress failed with error: {e}")
 
-    # Iterate through all .hmm files again to run hmmscan
-    for hmm_file in os.listdir(hmm_model_dir):
-        if hmm_file.endswith('.hmm'):
-            hmm_file_path = os.path.join(hmm_model_dir, hmm_file)
-            print(f"Processing HMM file: {hmm_file_path}")
-            
-            # Construct the HMMER command for each HMM file and store result in a temporary file
-            cmd = f"hmmscan --domtblout {temp_output_file} {hmm_file_path} {protein_sequences}"
-            try:
-                # Run HMMER and write the results to the temporary file
-                subprocess.run(cmd, shell=True, check=True)
-                print(f"Completed HMM file: {hmm_file_path}")
-
-                # Append the temporary results to the final output file
-                with open(temp_output_file, 'r') as temp_file:
-                    with open(output_file, 'a') as final_file:
-                        final_file.write(temp_file.read())
+    # Open the output file for writing results
+    with open(output_file, 'w') as f_out:
+        # Iterate through all .hmm files again to run hmmscan
+        for hmm_file in os.listdir(hmm_model_dir):
+            if hmm_file.endswith('.hmm'):
+                hmm_file_path = os.path.join(hmm_model_dir, hmm_file)
+                print(f"Processing HMM file: {hmm_file_path}")
                 
-                # Clear the temporary file for the next iteration
-                with open(temp_output_file, 'w') as temp_file:
-                    temp_file.write("")
-
-            except subprocess.CalledProcessError as e:
-                raise RuntimeError(f"HMMER failed with error: {e}")
+                # Construct the HMMER command for each HMM file
+                cmd = f"hmmscan --domtblout /dev/stdout {hmm_file_path} {protein_sequences}"
+                try:
+                    # Run HMMER and append the results to the output file
+                    cmd = subprocess.run(cmd, shell=True, capture_output=True)
+                    print(f"Completed HMM file: {hmm_file_path}")
+                    for line in cmd.stodut.decode():
+                        #####remember remove！！！！
+                        if float(line.split()[6]) < e_value_threshold:
+                        #####remember remove！！！！
+                            output_file.write(line)
+                            output_file.flush()
+                except subprocess.CalledProcessError as e:
+                    raise RuntimeError(f"HMMER failed with error: {e}")
     
     print(f"HMMER process for {protein_sequences} finished. Results saved to {output_file}")
