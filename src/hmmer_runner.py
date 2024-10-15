@@ -37,8 +37,8 @@ def run_hmmer(protein_sequences, output_file):
                 except subprocess.CalledProcessError as e:
                     raise RuntimeError(f"hmmpress failed with error: {e}")
 
-    # Open the output file for appending results
-    with open(output_file, 'a') as f_out:
+    # Open the output file in binary append mode ('ab') for writing results
+    with open(output_file, 'ab') as f_out:
         # Iterate through all .hmm files again to run hmmscan
         for hmm_file in os.listdir(hmm_model_dir):
             if hmm_file.endswith('.hmm'):
@@ -48,9 +48,9 @@ def run_hmmer(protein_sequences, output_file):
                 # Construct the HMMER command for each HMM file
                 cmd = f"hmmscan --domtblout /dev/stdout {hmm_file_path} {protein_sequences}"
                 try:
-                    # Run HMMER and capture the results
-                    result = subprocess.run(cmd, shell=True, check=True, capture_output=True, text=True)
-                    # Append the results to the output file
+                    # Run HMMER and capture the results as binary data
+                    result = subprocess.run(cmd, shell=True, check=True, capture_output=True)
+                    # Append the binary results to the output file
                     f_out.write(result.stdout)
                     print(f"Completed HMM file: {hmm_file_path}")
                 except subprocess.CalledProcessError as e:
