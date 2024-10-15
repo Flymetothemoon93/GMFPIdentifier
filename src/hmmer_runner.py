@@ -38,7 +38,7 @@ def run_hmmer(protein_sequences, output_file):
                     raise RuntimeError(f"hmmpress failed with error: {e}")
 
     # Open the output file for writing results
-    with open(output_file, 'w') as f_out:
+    with open(output_file, 'a') as f_out:
         # Iterate through all .hmm files again to run hmmscan
         for hmm_file in os.listdir(hmm_model_dir):
             if hmm_file.endswith('.hmm'):
