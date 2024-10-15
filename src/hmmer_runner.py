@@ -1,14 +1,13 @@
 import subprocess
 import os
 
-def run_hmmer(protein_sequences, output_file, e_value_threshold=1e-5):
+def run_hmmer(protein_sequences, output_file):
     """
     Runs the HMMER tool to scan the provided protein sequences using HMM models from GyDB.
     
     Parameters:
     - protein_sequences (str): Path to the input protein sequences in FASTA format.
     - output_file (str): Path where the hmmer_results.txt should be saved.
-    - e_value_threshold (float): Threshold for filtering results by E-value.
     
     Returns:
     - None: Outputs the results to a file in the specified output path.
@@ -49,21 +48,9 @@ def run_hmmer(protein_sequences, output_file, e_value_threshold=1e-5):
                 # Construct the HMMER command for each HMM file
                 cmd = f"hmmscan --domtblout /dev/stdout {hmm_file_path} {protein_sequences}"
                 try:
-                    # Run HMMER and capture the output
-                    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+                    # Run HMMER and append the results to the output file
+                    subprocess.run(cmd, shell=True, check=True, stdout=f_out)
                     print(f"Completed HMM file: {hmm_file_path}")
-                    
-                    # Parse the output line by line
-                    for line in result.stdout.splitlines():
-                        fields = line.split()
-                        if len(fields) > 6:  # Ensure there are enough fields
-                            try:
-                                if float(fields[6]) < e_value_threshold:
-                                    f_out.write(line + '\n')
-                                    f_out.flush()
-                            except ValueError:
-                                # Skip lines that can't be converted to float
-                                continue
                 except subprocess.CalledProcessError as e:
                     raise RuntimeError(f"HMMER failed with error: {e}")
     
