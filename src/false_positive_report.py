@@ -1,6 +1,5 @@
 import csv
 from collections import defaultdict
-import os
 
 # Function to parse the bed file and generate the report with false positives
 def generate_false_positive_report(input_file, output_report):
@@ -36,17 +35,3 @@ def generate_false_positive_report(input_file, output_report):
             report_file.write(f"{fp[0]}\t{fp[1]}\t{fp[2]}\t{fp[3]}\t{fp[4]}\n")
     
     print(f"False positive report generated at {output_report}")
-
-# Automatically handle the te_gene_overlaps.bed file from the pipeline and save the output
-def run_pipeline():
-    input_file = 'te_gene_overlaps.bed'  # Input from the pipeline
-    output_report = 'false_positives_report.txt'  # Output report file
-    
-    if os.path.exists(input_file):
-        generate_false_positive_report(input_file, output_report)
-    else:
-        print(f"Error: {input_file} not found in the pipeline.")
-        
-# Run the script as part of the pipeline
-if __name__ == "__main__":
-    run_pipeline()
