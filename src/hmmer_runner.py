@@ -39,7 +39,7 @@ def run_hmmer(protein_sequences, output_file):
                 print(f"Running hmmpress on {hmm_file_path}")
                 cmd_hmmpress = f"hmmpress {hmm_file_path}"
                 try:
-                    subprocess.run(cmd_hmmpress, shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                    subprocess.run(cmd_hmmpress, shell=True, check=True)
                     print(f"hmmpress completed for {hmm_file_path}")
                 except subprocess.CalledProcessError as e:
                     raise RuntimeError(f"hmmpress failed with error: {e}")
@@ -53,8 +53,8 @@ def run_hmmer(protein_sequences, output_file):
             # Construct the HMMER command for each HMM file and store result in a temporary file
             cmd = f"hmmscan --domtblout {temp_output_file} {hmm_file_path} {protein_sequences}"
             try:
-                # Run HMMER and write the results to the temporary file without outputting the detailed log
-                subprocess.run(cmd, shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                # Run HMMER and write the results to the temporary file
+                subprocess.run(cmd, shell=True, check=True)
                 print(f"Completed HMM file: {hmm_file_path}")
 
                 # Append the temporary results to the final output file (in text mode)
