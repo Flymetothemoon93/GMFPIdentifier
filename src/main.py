@@ -9,7 +9,7 @@ from hmmer_results_parser import parse_hmmer_results
 from replace_target_name import replace_target_with_contig
 from annotation_comparison import convert_to_bed, compare_with_annotations
 from false_positive_report import generate_false_positive_report
-from plot_false_positives import run_pipeline_plot
+from plot_false_positives import parse_bed_file_with_flexible_prediction, plot_false_positives
 
 def format_time(seconds):
     """
@@ -94,7 +94,8 @@ def main():
     
     # Step 10: Generate bar chart for false positives
     print_status("Generating bar chart for false positives")
-    run_pipeline_plot()  # Call the plotting function
+    false_positive_count = parse_bed_file_with_flexible_prediction(os.path.join(output_dir, 'te_gene_overlaps.bed'))
+    plot_false_positives(false_positive_count, output_dir)  # Call the plotting function
     
     # Final status
     print_status(f"Pipeline completed. Gene overlap results saved to: {os.path.join(output_dir, 'te_gene_overlaps.bed')}")
