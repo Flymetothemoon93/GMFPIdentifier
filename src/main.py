@@ -22,7 +22,8 @@ def main():
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    # Output files    hmmer_output_file = os.path.join(output_dir, "hmmer_results.txt")         # Output of hmmer_runner
+    # Output files
+    hmmer_output_file = os.path.join(output_dir, "hmmer_results.txt")         # Output of hmmer_runner
     parsed_hmmer_file = os.path.join(output_dir, "parsed_hmmer_results.txt")  # Output of hmmer_results_parser
     analysis_report_file = os.path.join(output_dir, "hmmer_analysis_report.txt")  # Final analysis report
 
