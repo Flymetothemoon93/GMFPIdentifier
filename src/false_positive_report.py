@@ -16,21 +16,25 @@ def generate_false_positive_report(input_file, output_report):
             query_name = row[3] 
             annotation_info = row[-1] 
             
-            # Search for the "prediction=" field in the annotation_info column
             prediction_value = None
             for entry in annotation_info.split(';'):
                 if "prediction=" in entry:
-                    prediction_value = int(entry.split('=')[1])  # Extract the prediction value
+                    prediction_value = int(entry.split('=')[1]) 
                     break
 
-            # Count false positives (prediction != 0)
             if prediction_value is not None and prediction_value != 0:
                 contig_false_positive_count[contig] += 1
                 false_positives.append((contig, start, end, query_name, prediction_value))
     
-    # Write the detailed report
+    total_false_positives = len(false_positives)
+    
     with open(output_report, 'w') as report_file:
+        report_file.write("PFIdentifier Report\n")
+        report_file.write("===========================\n")
+        report_file.write(f"Total False Positives identified: {total_false_positives}\n\n")
+        report_file.write("Detailed False Positive List:\n")
         report_file.write("Contig\tStart\tEnd\tQuery Name\tPrediction\n")
+        
         for fp in false_positives:
             report_file.write(f"{fp[0]}\t{fp[1]}\t{fp[2]}\t{fp[3]}\t{fp[4]}\n")
     
