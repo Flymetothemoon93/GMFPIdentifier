@@ -18,9 +18,10 @@ def replace_target_with_contig(hmmer_results_file, output_file, fasta_file):
         for line in fasta:
             if line.startswith('>'):
                 header = line.strip().split()[0][1:]  # Remove '>' and keep the sequence ID
-                match = re.search(r'chr=(\S+)', line)  # Extract contig name
+                # Modify the regex to capture contig/scaffold/Chr regardless of the format
+                match = re.search(r'chr=([^\s]+)|scaffold=([^\s]+)|contig=([^\s]+)', line, re.IGNORECASE)
                 if match:
-                    contig_name = match.group(1)
+                    contig_name = match.group(1) or match.group(2) or match.group(3)
                     query_to_contig[header] = contig_name
 
     # Step 2: Process the parsed HMMER results and replace the target name
@@ -31,7 +32,7 @@ def replace_target_with_contig(hmmer_results_file, output_file, fasta_file):
             else:
                 fields = line.strip().split()
                 if len(fields) > 3:
-                    query_name = fields[3] 
+                    query_name = fields[3]  # Adjust according to where the target name is in your input
                     if query_name in query_to_contig:
                         contig_name = query_to_contig[query_name]
                         fields[0] = contig_name
@@ -42,16 +43,3 @@ def replace_target_with_contig(hmmer_results_file, output_file, fasta_file):
                     outfile.write(line)
 
     print(f"Results saved to {output_file}")
-
-
-if __name__ == "__main__":
-    import sys
-    if len(sys.argv) != 4:
-        print("Usage: python replace_target_name.py <hmmer_parsed_results.txt> <output.txt> <input.fasta>")
-        sys.exit(1)
-    
-    hmmer_results_file = sys.argv[1]
-    output_file = sys.argv[2]
-    fasta_file = sys.argv[3]
-    
-    replace_target_with_contig(hmmer_results_file, output_file, fasta_file)
