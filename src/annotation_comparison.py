@@ -22,11 +22,12 @@ def convert_to_bed(hmmer_results_file, bed_output_file):
             
             # Extract the relevant fields
             chromosome = fields[0]  # Contig name (which was originally the target name)
-            start = fields[15]  # HMM alignment start (hm coord 'from')
-            end = fields[16]    # HMM alignment end (hm coord 'to')
+            start = fields[17]  # ali coord start (alignment in query, not HMM)
+            end = fields[18]    # ali coord end (alignment in query, not HMM)
             name = fields[3]    # Query name (e.g., protein or TE name)
             score = fields[6]   # E-value (or another score)
 
+            
             # Write to BED format (chromosome, start, end, name, score)
             bed_line = f"{chromosome}\t{start}\t{end}\t{name}\t{score}\n"
             outfile.write(bed_line)
