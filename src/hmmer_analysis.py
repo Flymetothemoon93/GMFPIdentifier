@@ -13,6 +13,7 @@ def analyze_hmmer_results(parsed_results_file, output_report_file):
     """
     te_details = []
     unique_hits = set()
+    unique_proteins = set()  # Set to track unique protein names (query names)
     
     try:
         # Read the parsed HMMER results file
@@ -32,7 +33,7 @@ def analyze_hmmer_results(parsed_results_file, output_report_file):
                 e_value = fields[6]    # E-value (seventh column)
                 score = fields[7]      # Score (eighth column)
 
-                # Generate a unique identifier for this TE hit
+                # Generate a unique identifier for this TE hit (by TE name, query, start, and end)
                 hit_key = (te_name, query_name, start, end)
 
                 # Ensure only unique TEs per position are counted
@@ -46,13 +47,17 @@ def analyze_hmmer_results(parsed_results_file, output_report_file):
                         "E-value": e_value,
                         "Score": score
                     })
+                
+                # Add query_name to unique_proteins to ensure each protein is counted only once
+                unique_proteins.add(query_name)
 
         # Write the analysis report
         with open(output_report_file, 'w') as report:
             # Report header
             report.write("HMMER Detailed Analysis Report\n")
             report.write("================================\n")
-            report.write(f"Total unique TEs identified: {len(te_details)}\n\n")
+            # Output the count of unique proteins instead of total TE hits
+            report.write(f"Total unique TEs identified (unique proteins): {len(unique_proteins)}\n\n")
             
             # Detailed list of TEs
             report.write("List of unique TEs with detailed information:\n")
