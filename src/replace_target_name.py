@@ -42,16 +42,3 @@ def replace_target_with_contig(hmmer_results_file, output_file, fasta_file):
                     outfile.write(line)
 
     print(f"Results saved to {output_file}")
-
-
-if __name__ == "__main__":
-    import sys
-    if len(sys.argv) != 4:
-        print("Usage: python replace_target_name.py <hmmer_parsed_results.txt> <output.txt> <input.fasta>")
-        sys.exit(1)
-    
-    hmmer_results_file = sys.argv[1]
-    output_file = sys.argv[2]
-    fasta_file = sys.argv[3]
-    
-    replace_target_with_contig(hmmer_results_file, output_file, fasta_file)
