@@ -9,7 +9,7 @@ from hmmer_results_parser import parse_hmmer_results
 from replace_target_name import replace_target_with_contig
 from annotation_comparison import convert_to_bed, compare_with_annotations
 from false_positive_report import generate_false_positive_report
-from plot_false_positives import parse_bed_file_with_flexible_prediction, plot_false_positives
+from plot_false_positives import count_false_positives_from_merged_regions, plot_false_positives
 
 def format_time(seconds):
     """
@@ -87,14 +87,14 @@ def main():
     print_status("Comparing TE proteins with gene annotations")
     compare_with_annotations(bed_output_file, annotation_file, output_dir)
     
-    # Step 9: Generate false positive report
+    # Step 9: Generate false positive report and get merged regions
     print_status("Generating false positive report")
     false_positive_report_file = os.path.join(output_dir, "false_positives_report.txt")
-    generate_false_positive_report(os.path.join(output_dir, 'te_gene_overlaps.bed'), false_positive_report_file)
+    merged_regions = generate_false_positive_report(os.path.join(output_dir, 'te_gene_overlaps.bed'), false_positive_report_file)
     
-    # Step 10: Generate bar chart for false positives
+    # Step 10: Generate bar chart for false positives using merged regions
     print_status("Generating bar chart for false positives")
-    false_positive_count = parse_bed_file_with_flexible_prediction(os.path.join(output_dir, 'te_gene_overlaps.bed'))
+    false_positive_count = count_false_positives_from_merged_regions(merged_regions)
     plot_false_positives(false_positive_count, output_dir)  # Call the plotting function
     
     # Final status
