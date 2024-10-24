@@ -2,7 +2,8 @@ import pandas as pd
 
 def analyze_hmmer_results(parsed_results_file, output_report_file):
     """
-    Analyzes parsed HMMER results to identify detailed information for transposable elements (TEs).
+    Analyzes parsed HMMER results to identify detailed information for transposable elements (TEs)
+    and merge overlapping or adjacent regions within 10 base pairs.
     
     Parameters:
     - parsed_results_file (str): Path to the parsed HMMER results file.
@@ -14,10 +15,11 @@ def analyze_hmmer_results(parsed_results_file, output_report_file):
     te_details = []
     unique_hits = set()
     unique_proteins = set()  # Set to track unique protein names (query names)
-    
+
     try:
         # Read the parsed HMMER results file
         with open(parsed_results_file, 'r') as infile:
+            last_hit = None
             for line in infile:
                 if line.startswith('#'):  # Skip comment lines
                     continue
@@ -28,28 +30,40 @@ def analyze_hmmer_results(parsed_results_file, output_report_file):
                 
                 te_name = fields[0]    # TE name (first column)
                 query_name = fields[3] # Query protein name (fourth column)
-                start = fields[17]     # Start position (ali coord start, 18th column)
-                end = fields[18]       # End position (ali coord end, 19th column)
+                start = int(fields[17]) # Start position (ali coord start, 18th column)
+                end = int(fields[18])   # End position (ali coord end, 19th column)
                 e_value = fields[6]    # E-value (seventh column)
                 score = fields[7]      # Score (eighth column)
 
-                # Generate a unique identifier for this TE hit (by TE name, query, start, and end)
-                hit_key = (te_name, query_name, start, end)
-
-                # Ensure only unique TEs per position are counted
-                if hit_key not in unique_hits:
-                    unique_hits.add(hit_key)
-                    te_details.append({
-                        "TE Name": te_name,
-                        "Query Name": query_name,
-                        "Start": start,
-                        "End": end,
-                        "E-value": e_value,
-                        "Score": score
-                    })
+                # Merge overlapping or adjacent regions within 10 base pairs
+                if last_hit and last_hit["TE Name"] == te_name and last_hit["Query Name"] == query_name:
+                    if start <= last_hit["End"] + 10:  # Allow 10 base pair adjacency for merging
+                        # Update the end position and possibly the E-value or score
+                        last_hit["End"] = max(last_hit["End"], end)
+                        last_hit["E-value"] = min(last_hit["E-value"], e_value)
+                        last_hit["Score"] = max(last_hit["Score"], score)
+                        continue
                 
+                # Add the last hit to the details list if it exists
+                if last_hit:
+                    te_details.append(last_hit)
+                
+                # Create a new hit
+                last_hit = {
+                    "TE Name": te_name,
+                    "Query Name": query_name,
+                    "Start": start,
+                    "End": end,
+                    "E-value": e_value,
+                    "Score": score
+                }
+
                 # Add query_name to unique_proteins to ensure each protein is counted only once
                 unique_proteins.add(query_name)
+
+            # Add the final hit after the loop ends
+            if last_hit:
+                te_details.append(last_hit)
 
         # Write the analysis report
         with open(output_report_file, 'w') as report:
