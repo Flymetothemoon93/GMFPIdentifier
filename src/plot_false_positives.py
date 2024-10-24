@@ -1,28 +1,14 @@
 import matplotlib.pyplot as plt
-from collections import defaultdict
 import os
+from collections import defaultdict
 
-# Function to parse the bed file and count false positives per contig
-def parse_bed_file_with_flexible_prediction(file_path):
+# Function to count false positives per contig from the merged regions
+def count_false_positives_from_merged_regions(merged_regions):
     contig_false_positive_count = defaultdict(int)
     
-    with open(file_path, 'r') as file:
-        for line in file:
-            cols = line.split()
-            contig = cols[0]
-            additional_info = cols[-1] 
-            
-            prediction_value = None  # Initialize prediction_value
-            
-            # Search for the "prediction=" field in the annotation info
-            for entry in additional_info.split(';'):
-                if "prediction=" in entry:
-                    prediction_value = int(entry.split('=')[1])  # Extract the prediction value
-                    break
-
-            # Count false positives (prediction != 0) if prediction_value was found
-            if prediction_value is not None and prediction_value != 0:
-                contig_false_positive_count[contig] += 1
+    # Count the number of false positives per contig
+    for contig, start, end, query_name, pred_value in merged_regions:
+        contig_false_positive_count[contig] += 1  # Increment for each false positive region
     
     return contig_false_positive_count
 
