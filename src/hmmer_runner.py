@@ -12,7 +12,9 @@ def run_hmmer(protein_sequences, output_file):
     Returns:
     - None: Outputs the results to a file in the specified output path.
     """
-
+    
+    print("HMMER process started...")
+    
     # Define the HMM model directory
     hmm_model_dir = 'database/GyDB'
 
@@ -54,7 +56,7 @@ def run_hmmer(protein_sequences, output_file):
             cmd = f"hmmscan --domtblout {temp_output_file} {hmm_file_path} {protein_sequences}"
             try:
                 # Run HMMER and write the results to the temporary file
-                subprocess.run(cmd, shell=True, check=True)
+                subprocess.run(cmd, shell=True, check=True,stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 print(f"Completed HMM file: {hmm_file_path}")
 
                 # Append the temporary results to the final output file (in text mode)
@@ -68,5 +70,9 @@ def run_hmmer(protein_sequences, output_file):
 
             except subprocess.CalledProcessError as e:
                 raise RuntimeError(f"HMMER failed with error: {e}")
+    
+    # Remove the temporary file after use
+    if os.path.exists(temp_output_file):
+        os.remove(temp_output_file)
     
     print(f"HMMER process for {protein_sequences} finished. Results saved to {output_file}")
