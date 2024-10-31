@@ -36,18 +36,21 @@ FPIdentifier is a bioinformatics tool designed to identify transposable elements
    - For other systems, refer to the [HMMER installation guide](http://hmmer.org/download.html).
 
 4. **Download and Install InterProScan**
-   - To validate HMMER’s results, download InterProScan from [InterProScan’s official website](https://www.ebi.ac.uk/interpro/interproscan.html).
-   - Installation:
-     1. Go to the [InterProScan download page](https://www.ebi.ac.uk/interpro/interproscan.html).
-     2. Choose the appropriate version for your system (e.g., `Linux x64` for most servers).
-     3. Download and extract the package in a directory of your choice:
-        ```bash
-        tar -zxvf interproscan-5.70-102.0-64-bit.tar.gz
-        ```
-     4. Move the extracted folder to your software directory (e.g., `~/99_software`).
+   - Download InterProScan from the official site. You can use the following command to download version 5.70-102.0:
+     ```bash
+     wget https://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.70-102.0/interproscan-5.70-102.0-64-bit.tar.gz
+     ```
+   - Alternatively, use `curl`:
+     ```bash
+     curl -O https://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.70-102.0/interproscan-5.70-102.0-64-bit.tar.gz
+     ```
+   - After downloading, extract the file in your chosen directory:
+     ```bash
+     tar -zxvf interproscan-5.70-102.0-64-bit.tar.gz
+     ```
 
 5. **Set the InterProScan Path**
-   - Set the `INTERPROSCAN_PATH` environment variable to point to your InterProScan installation path:
+   - Set the `INTERPROSCAN_PATH` environment variable to point to your InterProScan installation path. Replace `/path/to` with the directory where you extracted InterProScan:
      ```bash
      export INTERPROSCAN_PATH=/path/to/interproscan-5.70-102.0
      ```
