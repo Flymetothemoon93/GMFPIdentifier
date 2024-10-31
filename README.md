@@ -1,18 +1,18 @@
 # FPIdentifier
 
-FPIdentifier is a bioinformatics tool designed to identify transposable elements (TEs) that may be misidentified as genes in genomic annotations. The tool utilizes HMMER for sequence analysis against the GyDB database to detect potential transposon-related domains, with an option for functional annotation through InterProScan.
+FPIdentifier is a bioinformatics tool designed to identify transposable elements (TEs) that may be misidentified as genes in genomic annotations. The tool utilizes HMMER to scan protein sequences against the GyDB database, detecting potential transposon-related domains. InterProScan is then used to validate these results, ensuring that the proteins identified by HMMER as TEs are indeed transposon-related, thus reducing false positives.
 
 ## Features
 
 - Identify transposable element proteins from protein sequences using HMMER and GyDB profiles.
 - Filter and extract high-confidence TE protein sequences.
-- Annotate TE proteins with functional information using InterProScan (optional).
+- Validate HMMER results with InterProScan to eliminate false positives.
 
 ## Prerequisites
 
 - **Python** (3.6 or later, with required packages in `requirements.txt`)
 - **HMMER** (must be installed and accessible in your system path)
-- **InterProScan** (installation instructions below) for functional annotation.
+- **InterProScan** (installation instructions below) for verification of TE proteins.
 
 ## Installation
 
@@ -35,8 +35,8 @@ FPIdentifier is a bioinformatics tool designed to identify transposable elements
      ```
    - For other systems, refer to the [HMMER installation guide](http://hmmer.org/download.html).
 
-4. **Download and Install InterProScan (Optional)**
-   - To add functional annotations, download InterProScan from [InterProScan’s official website](https://www.ebi.ac.uk/interpro/interproscan.html).
+4. **Download and Install InterProScan**
+   - To validate HMMER’s results, download InterProScan from [InterProScan’s official website](https://www.ebi.ac.uk/interpro/interproscan.html).
    - Installation:
      1. Go to the [InterProScan download page](https://www.ebi.ac.uk/interpro/interproscan.html).
      2. Choose the appropriate version for your system (e.g., `Linux x64` for most servers).
@@ -75,7 +75,7 @@ This command will:
 1. Run HMMER to identify transposable element-related proteins.
 2. Filter the HMMER results to retain high-confidence TE protein predictions.
 3. Extract relevant protein sequences for further analysis.
-4. (Optional) Run InterProScan to annotate these sequences with functional information if `INTERPROSCAN_PATH` is set.
+4. Run InterProScan to confirm that the filtered sequences are true transposon-related proteins, removing false positives.
 
 ## Troubleshooting
 
