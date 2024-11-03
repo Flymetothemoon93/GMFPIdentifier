@@ -33,7 +33,7 @@ def run_interproscan(input_fasta, output_file):
             "-f", "tsv",  # Specify output format; can be changed based on requirements
             "-goterms",   # Include GO terms if relevant for functional annotation
             "-iprlookup", # Include InterPro annotations
-            "--cpu", "4"  # Number of CPU cores to use; adjust based on your system
+            "--cpu", "4"  # Number of CPU cores to use
         ]
         
         # Run InterProScan
