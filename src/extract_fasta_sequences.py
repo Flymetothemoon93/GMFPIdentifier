@@ -3,6 +3,7 @@ from Bio import SeqIO
 def extract_sequences(filtered_results_file, protein_sequences_file, output_fasta):
     """
     Extracts protein sequences from the filtered HMMER results and creates a FASTA file.
+    Removes any '*' characters from the extracted sequences.
 
     Parameters:
     - filtered_results_file (str): Path to the filtered results file from filter_hmmer_results.py.
@@ -30,6 +31,8 @@ def extract_sequences(filtered_results_file, protein_sequences_file, output_fast
             matched = False
             for record in SeqIO.parse(protein_sequences_file, "fasta"):
                 if record.id in filtered_ids:
+                    # Remove '*' characters from the sequence using replace
+                    record.seq = record.seq.replace("*", "")
                     SeqIO.write(record, output_handle, "fasta")
                     matched = True
             
