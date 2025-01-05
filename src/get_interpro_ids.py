@@ -8,9 +8,7 @@ def run_hmmsearch(hmm_file, protein_db, output_dir):
     """
     output_file = os.path.join(output_dir, os.path.basename(hmm_file).replace(".hmm", "_results.tbl"))
     cmd = f"hmmsearch --tblout {output_file} --cpu 24 {hmm_file} {protein_db}"
-    # Suppress detailed output by redirecting stdout and stderr to /dev/null
-    with open(os.devnull, 'w') as devnull:
-        subprocess.run(cmd, shell=True, check=True, stdout=devnull, stderr=devnull)
+    subprocess.run(cmd, shell=True, check=True)
     return output_file
 
 def map_to_interpro(hmm_results, protein2ipr, output_file):
@@ -23,15 +21,21 @@ def map_to_interpro(hmm_results, protein2ipr, output_file):
             if not line.startswith("#") and line.strip():
                 proteins.append(line.split()[0])  # Extract matched protein ID
 
-    # Load InterPro mapping file
-    ipr_data = pd.read_csv(protein2ipr, sep="\t", header=None, names=["UniProt_ID", "InterPro_ID"])
+    try:
+        # Load InterPro mapping file using the Python engine for better compatibility
+        ipr_data = pd.read_csv(protein2ipr, sep="\t", header=None, names=["UniProt_ID", "InterPro_ID"], engine="python")
+    except Exception as e:
+        print(f"Error reading InterPro mapping file: {e}")
+        return
+
+    # Map proteins to InterPro IDs
     matched_ipr = ipr_data[ipr_data["UniProt_ID"].isin(proteins)]
 
-    # Append results
+    # Append results to the output file
     matched_ipr.to_csv(output_file, sep="\t", index=False, mode='a', header=not os.path.exists(output_file))
 
 def main():
-    # Configure paths
+    # Paths configuration
     hmm_dir = "database/GyDB"               # Directory containing HMM files
     protein_db = "database/uniprot_sprot.fasta"   # Path to protein database
     output_dir = "results/hmmsearch"        # Directory for HMMER output
@@ -41,23 +45,26 @@ def main():
     # Create output directory
     os.makedirs(output_dir, exist_ok=True)
 
-    # Clear final output if it exists
+    # Clear final output file if it already exists
     if os.path.exists(final_output):
         os.remove(final_output)
 
-    # Run HMMER and map to InterPro IDs for each HMM file
+    # List all HMM files in the directory
     hmm_files = [f for f in os.listdir(hmm_dir) if f.endswith(".hmm")]
     print(f"Found {len(hmm_files)} HMM files to process.")
-    
-    for index, hmm_file in enumerate(hmm_files, 1):
-        print(f"Processing {index}/{len(hmm_files)}: {hmm_file}")
+
+    # Process each HMM file
+    for i, hmm_file in enumerate(hmm_files, start=1):
+        print(f"Processing {i}/{len(hmm_files)}: {hmm_file}")
         hmm_path = os.path.join(hmm_dir, hmm_file)
         try:
+            # Run HMMER search
             hmm_results = run_hmmsearch(hmm_path, protein_db, output_dir)
+            # Map to InterPro IDs
             map_to_interpro(hmm_results, protein2ipr, final_output)
+            print(f"Completed processing {hmm_file}")
         except Exception as e:
             print(f"Error processing {hmm_file}: {e}")
-        print(f"Finished processing {index}/{len(hmm_files)}: {hmm_file}")
 
 if __name__ == "__main__":
     main()
