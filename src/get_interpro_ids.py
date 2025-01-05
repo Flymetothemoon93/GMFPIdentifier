@@ -8,7 +8,9 @@ def run_hmmsearch(hmm_file, protein_db, output_dir):
     """
     output_file = os.path.join(output_dir, os.path.basename(hmm_file).replace(".hmm", "_results.tbl"))
     cmd = f"hmmsearch --tblout {output_file} --cpu 24 {hmm_file} {protein_db}"
-    subprocess.run(cmd, shell=True, check=True)
+    # Suppress detailed output by redirecting stdout and stderr to /dev/null
+    with open(os.devnull, 'w') as devnull:
+        subprocess.run(cmd, shell=True, check=True, stdout=devnull, stderr=devnull)
     return output_file
 
 def map_to_interpro(hmm_results, protein2ipr, output_file):
@@ -46,16 +48,16 @@ def main():
     # Run HMMER and map to InterPro IDs for each HMM file
     hmm_files = [f for f in os.listdir(hmm_dir) if f.endswith(".hmm")]
     print(f"Found {len(hmm_files)} HMM files to process.")
-
-    for idx, hmm_file in enumerate(hmm_files, start=1):
-        print(f"Processing {idx}/{len(hmm_files)}: {hmm_file}")
+    
+    for index, hmm_file in enumerate(hmm_files, 1):
+        print(f"Processing {index}/{len(hmm_files)}: {hmm_file}")
         hmm_path = os.path.join(hmm_dir, hmm_file)
         try:
             hmm_results = run_hmmsearch(hmm_path, protein_db, output_dir)
             map_to_interpro(hmm_results, protein2ipr, final_output)
-            print(f"Completed {idx}/{len(hmm_files)}: {hmm_file}")
         except Exception as e:
             print(f"Error processing {hmm_file}: {e}")
+        print(f"Finished processing {index}/{len(hmm_files)}: {hmm_file}")
 
 if __name__ == "__main__":
     main()
