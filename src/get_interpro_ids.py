@@ -43,22 +43,19 @@ def main():
     if os.path.exists(final_output):
         os.remove(final_output)
 
-    # Get list of HMM files
+    # Run HMMER and map to InterPro IDs for each HMM file
     hmm_files = [f for f in os.listdir(hmm_dir) if f.endswith(".hmm")]
     print(f"Found {len(hmm_files)} HMM files to process.")
-    
-    # Process each HMM file
+
     for idx, hmm_file in enumerate(hmm_files, start=1):
-        print(f"Processing file {idx}/{len(hmm_files)}: {hmm_file}")
+        print(f"Processing {idx}/{len(hmm_files)}: {hmm_file}")
         hmm_path = os.path.join(hmm_dir, hmm_file)
         try:
             hmm_results = run_hmmsearch(hmm_path, protein_db, output_dir)
             map_to_interpro(hmm_results, protein2ipr, final_output)
-            print(f"Completed file {idx}/{len(hmm_files)}: {hmm_file}")
+            print(f"Completed {idx}/{len(hmm_files)}: {hmm_file}")
         except Exception as e:
             print(f"Error processing {hmm_file}: {e}")
-
-    print("All files processed.")
 
 if __name__ == "__main__":
     main()
