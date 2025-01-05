@@ -74,15 +74,13 @@ def main():
         os.remove(final_output)
 
     # Run HMMER and map to InterPro IDs for each HMM file
-    for hmm_file in sorted(os.listdir(hmm_dir)):
-        if hmm_file.endswith(".hmm"):
-            hmm_path = os.path.join(hmm_dir, hmm_file)
-            print(f"Processing HMM file: {hmm_file}")
+    hmm_files = [os.path.join(hmm_dir, f) for f in os.listdir(hmm_dir) if f.endswith(".hmm")]
+    print(f"Found {len(hmm_files)} HMM files to process.")
 
-            # Run HMMER
-            hmm_results = run_hmmsearch(hmm_path, protein_db, output_dir, error_log)
-
-            # Map to InterPro IDs
+    for hmm_file in hmm_files:
+        print(f"Processing HMM file: {os.path.basename(hmm_file)}")
+        hmm_results = run_hmmsearch(hmm_file, protein_db, output_dir, error_log)
+        if hmm_results:
             map_to_interpro(hmm_results, protein2ipr, final_output, error_log)
 
 if __name__ == "__main__":
