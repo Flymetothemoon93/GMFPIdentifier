@@ -3,6 +3,7 @@ from hmmer_runner import run_hmmer
 from hmmer_filter import filter_hmmer_results
 from extract_fasta_sequences import extract_sequences
 from interproscan_runner import run_interproscan
+from generate_report import generate_report
 
 def main(input_fasta, output_dir):
     # Check if INTERPROSCAN_PATH environment variable is set
@@ -29,6 +30,11 @@ def main(input_fasta, output_dir):
     interproscan_output = os.path.join(output_dir, "interproscan_results.tsv")
     print("Step 4: Running InterProScan...")
     run_interproscan(filtered_fasta_output, interproscan_output)
+
+    # Step 5: Generate final report
+    report_output = os.path.join(output_dir, "FPIdentifier_report.txt")
+    print("Step 5: Generating final report...")
+    generate_report(interproscan_output, report_output)
 
     print("Pipeline completed successfully. Results are saved in the specified output directory.")
 
