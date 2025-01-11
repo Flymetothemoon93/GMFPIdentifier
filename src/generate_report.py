@@ -166,9 +166,6 @@ def generate_report(input_file, output_file):
     "IPR054836": "Transposase for transposon Tn5",
     "IPR055247": "Insertion element IS150 protein InsJ-like, helix-turn-helix domain"
 }
-
-
-
     
     # Initialize counters and results list
     total_proteins = 0
