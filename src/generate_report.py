@@ -207,6 +207,6 @@ def generate_report(input_file, output_file):
             report.write("No transposable proteins were detected in the input data.\n\n")
             report.write("Summary:\n")
             report.write("The analysis did not find any transposable proteins in the provided sequences.\n")
-            report.write("Please review the input file to ensure accuracy or consider using alternative datasets.\n")
+            report.write("This indicates that your annotated proteins are likely accurate.\n")
 
     print(f"Report generated successfully: {output_file}")
