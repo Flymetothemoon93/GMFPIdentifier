@@ -13,8 +13,11 @@ def main(input_fasta, output_dir):
         input_fasta (str): Path to the input FASTA file containing protein sequences.
         output_dir (str): Path to the output directory to save results.
     """
+    # Get the current directory of this script
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    
     # Define fixed path for the transposon InterPro JSON file
-    transposon_json = "database/transposon_interpro.json"
+    transposon_json = os.path.join(current_dir, "../database/transposon_interpro.json")
 
     # Check if JSON file exists
     if not os.path.exists(transposon_json):
@@ -24,7 +27,7 @@ def main(input_fasta, output_dir):
     interproscan_path = os.environ.get("INTERPROSCAN_PATH")
     if not interproscan_path:
         raise EnvironmentError("Please set the INTERPROSCAN_PATH environment variable to the InterProScan installation path.")
-
+    
     try:
         # Step 1: Run HMMER analysis
         hmmer_output = os.path.join(output_dir, "hmmer_results.txt")
@@ -42,7 +45,7 @@ def main(input_fasta, output_dir):
         filtered_fasta_output = os.path.join(output_dir, "filtered_sequences.fasta")
         print("\n[Step 3] Extracting protein sequences...")
         extract_sequences(filtered_hmmer_output, input_fasta, filtered_fasta_output)
-        print(f"Filtered protein sequences saved to: {filtered_fasta_output}")
+        print(f"Filtered sequences saved to: {filtered_fasta_output}")
 
         # Step 4: Run InterProScan
         interproscan_output = os.path.join(output_dir, "interproscan_results.tsv")
@@ -59,7 +62,8 @@ def main(input_fasta, output_dir):
         print("\nPipeline completed successfully. Results are saved in the specified output directory.")
     
     except Exception as e:
-        print(f"Error occurred during pipeline execution: {e}")
+        print(f"Error: {e}")
+        raise
 
 if __name__ == "__main__":
     import argparse
@@ -72,5 +76,4 @@ if __name__ == "__main__":
     if not os.path.exists(args.output):
         os.makedirs(args.output)
 
-    # Run the pipeline
     main(args.input, args.output)
