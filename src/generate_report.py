@@ -49,8 +49,6 @@ def generate_report(input_file, output_file, transposon_json):
             report.write("===================\n")
             report.write("Purpose:\n")
             report.write("FPIdentifier detects transposable proteins (False Positives) in the input protein sequences.\n\n")
-            report.write(f"Input File: {input_file}\n")
-            report.write(f"Total Proteins Analyzed: {total_proteins}\n\n")
             report.write("Results:\n")
             
             if matched_proteins:
