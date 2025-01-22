@@ -44,7 +44,7 @@ FPIdentifier is a bioinformatics tool designed to identify transposable elements
      ```bash
      export PATH=$(pwd)/src:$PATH
      ```
-   - (For permanent addition, include this line in ~/.bashrc or ~/.zshrc.)
+   - For permanent addition, include this line in ~/.bashrc or ~/.zshrc.
       ```bash
      echo 'export PATH=$(pwd)/src:$PATH' >> ~/.bashrc
      source ~/.bashrc
