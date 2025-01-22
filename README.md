@@ -7,6 +7,7 @@ FPIdentifier is a bioinformatics tool designed to identify transposable elements
 - Identify transposable element proteins from protein sequences using HMMER and GyDB profiles.
 - Filter and extract high-confidence TE protein sequences.
 - Validate HMMER results with InterProScan to eliminate false positives.
+- Generate a detailed report summarizing identified transposon-related proteins and the pipeline runtime.
 
 ## Prerequisites
 
@@ -109,8 +110,6 @@ This command will:
   ```
 
 - **Permissions**: If you encounter permissions issues, ensure that you have execution permissions for the `interproscan.sh` script.
-
-- **Execution Format Error**: If you encounter format errors, make sure you are running the script on the appropriate operating system and have all necessary dependencies installed.
 
 ## License
 
