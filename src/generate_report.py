@@ -33,11 +33,11 @@ def generate_report(input_file, output_file, transposon_json, runtime_seconds):
     # Process the input file
     try:
         with open(input_file, 'r') as file:
-            reader = csv.DictReader(file, delimiter='\t')
+            reader = csv.reader(file, delimiter='\t')
             for row in reader:
                 total_proteins += 1
-                protein_name = row.get('Protein') 
-                interpro_id = row.get('InterPro ID') 
+                protein_name = row[0]  # First column: Protein name
+                interpro_id = row[11]  # 12th column: InterPro ID
                 
                 if interpro_id in transposon_interpro_ids:
                     matched_proteins.append({
