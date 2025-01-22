@@ -30,21 +30,25 @@ FPIdentifier is a bioinformatics tool designed to identify transposable elements
 3. **Install HMMER**
    - Download the latest HMMER version:
      ```bash
-     wget http://eddylab.org/software/hmmer/hmmer-<version>.tar.gz
+     wget http://eddylab.org/software/hmmer/hmmer.tar.gz
      ```
    - Extract and compile:
      ```bash
-     tar -xvzf hmmer-<version>.tar.gz
+     tar -xvzf hmmer.tar.gz
      cd hmmer-<version>
-     ./configure --prefix=$(pwd)
+     ./configure
      make
-     make install
+     sudo make install
      ```
    - Add HMMER to your PATH:
      ```bash
      export PATH=$(pwd)/src:$PATH
      ```
-     (For permanent addition, include this line in ~/.bashrc or ~/.zshrc.)
+   - (For permanent addition, include this line in ~/.bashrc or ~/.zshrc.)
+      ```bash
+     echo 'export PATH=$(pwd)/src:$PATH' >> ~/.bashrc
+     source ~/.bashrc
+     ```
 
    - Verify installation:
      ```bash
