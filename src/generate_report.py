@@ -1,7 +1,7 @@
 import csv
 import json
 
-def generate_report(input_file, output_file, transposon_json):
+def generate_report(input_file, output_file, transposon_json, runtime_seconds):
     """
     Generate a report identifying transposable proteins in input sequences.
 
@@ -9,7 +9,14 @@ def generate_report(input_file, output_file, transposon_json):
         input_file (str): Path to the input TSV file.
         output_file (str): Path to the output report file.
         transposon_json (str): Path to the JSON file containing transposon InterPro IDs and descriptions.
+        runtime_seconds (float): Total runtime of the pipeline in seconds.
     """
+
+    # Convert runtime from seconds to hours, minutes, and seconds
+    hours = int(runtime_seconds // 3600)
+    minutes = int((runtime_seconds % 3600) // 60)
+    seconds = int(runtime_seconds % 60)
+    formatted_runtime = f"{hours} hours {minutes} minutes {seconds} seconds"
 
     # Load transposon InterPro IDs from JSON
     try:
@@ -49,6 +56,7 @@ def generate_report(input_file, output_file, transposon_json):
             report.write("===================\n")
             report.write("Purpose:\n")
             report.write("FPIdentifier detects transposable proteins (False Positives) in the input protein sequences.\n\n")
+            report.write(f"Pipeline Runtime: {formatted_runtime}\n\n")  # Display runtime in formatted form
             report.write("Results:\n")
             
             if matched_proteins:
