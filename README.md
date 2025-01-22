@@ -71,7 +71,7 @@ python src/main.py --input your_protein_sequences.fasta --output results
 ### Example Usage
 
 ```bash
-python src/main.py --input test.athaliana.protein.fa --output test_output
+python src/main.py --input testdata/Athaliana_with_Gypsy.fa --output testoutput/Athaliana_with_Gypsy
 ```
 
 This command will:
