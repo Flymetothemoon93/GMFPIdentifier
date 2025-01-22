@@ -40,11 +40,16 @@ FPIdentifier is a bioinformatics tool designed to identify transposable elements
      make
      make install
      ```
-   - Download the latest HMMER version:
+   - Add HMMER to your PATH:
      ```bash
-     wget http://eddylab.org/software/hmmer/hmmer-<version>.tar.gz
+     export PATH=$(pwd)/src:$PATH
      ```
-   - For other systems, refer to the [HMMER installation guide](http://hmmer.org/download.html).
+     (For permanent addition, include this line in ~/.bashrc or ~/.zshrc.)
+
+   - Verify installation:
+     ```bash
+     hmmscan -h
+     ```
 
 4. **Download and Install InterProScan**
    - Download InterProScan from the official site. You can use the following command to download version 5.70-102.0:
@@ -90,6 +95,7 @@ This command will:
 2. Filter the HMMER results to retain high-confidence TE protein predictions.
 3. Extract relevant protein sequences for further analysis.
 4. Run InterProScan to confirm that the filtered sequences are true transposon-related proteins, removing false positives.
+5. Generate a detailed report summarizing the analysis, including the runtime, detected transposon-related proteins, and their descriptions.
 
 ## Troubleshooting
 
