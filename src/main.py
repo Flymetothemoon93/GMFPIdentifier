@@ -1,4 +1,5 @@
 import os
+import time  # Import time module for runtime calculation
 from hmmer_runner import run_hmmer
 from hmmer_filter import filter_hmmer_results
 from extract_fasta_sequences import extract_sequences
@@ -13,6 +14,9 @@ def main(input_fasta, output_dir):
         input_fasta (str): Path to the input FASTA file containing protein sequences.
         output_dir (str): Path to the output directory to save results.
     """
+    # Start timing the pipeline
+    start_time = time.time()
+
     # Get the current directory of this script
     current_dir = os.path.dirname(os.path.abspath(__file__))
     
@@ -56,7 +60,11 @@ def main(input_fasta, output_dir):
         # Step 5: Generate final report
         report_output = os.path.join(output_dir, "FPIdentifier_report.txt")
         print("\n[Step 5] Generating final report...")
-        generate_report(interproscan_output, report_output, transposon_json)
+        
+        # Calculate runtime and pass it to the report generation function
+        end_time = time.time()
+        runtime_seconds = end_time - start_time
+        generate_report(interproscan_output, report_output, transposon_json, runtime_seconds)
         print(f"Final report saved to: {report_output}")
 
         print("\nPipeline completed successfully. Results are saved in the specified output directory.")
