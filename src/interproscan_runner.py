@@ -77,7 +77,8 @@ def run_interproscan(input_fasta, output_file):
             "-goterms",
             "-iprlookup",
             "--cpu", "4",
-            "--disable-precalc"  # Prevents InterProScan from using its database for extra hits
+            "--disable-precalc",  # Prevents InterProScan from using its database for extra hits
+            "--disable-residue-precalc"
         ]
 
         # Step 4: Run InterProScan
