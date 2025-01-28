@@ -25,7 +25,7 @@ def truncate_fasta_ids(input_fasta, truncated_fasta):
 
 def restore_fasta_ids(output_tsv, id_mapping, restored_tsv):
     """
-    Restore original sequence IDs in the InterProScan results.
+    Restore original sequence IDs in the InterProScan results while ensuring only expected IDs are modified.
 
     Parameters:
     - output_tsv (str): Path to the InterProScan results with truncated IDs.
@@ -34,10 +34,13 @@ def restore_fasta_ids(output_tsv, id_mapping, restored_tsv):
     """
     with open(output_tsv, 'r') as input_handle, open(restored_tsv, 'w') as output_handle:
         for line in input_handle:
+            restored_line = line
             for truncated_id, original_id in id_mapping.items():
-                if truncated_id in line:
-                    line = line.replace(truncated_id, original_id)
-            output_handle.write(line)
+                if truncated_id in restored_line:
+                    restored_line = restored_line.replace(truncated_id, original_id)
+            # Ensure that only sequences present in the input dataset are included
+            if any(original_id in restored_line for original_id in id_mapping.values()):
+                output_handle.write(restored_line)
 
 def run_interproscan(input_fasta, output_file):
     """
@@ -65,7 +68,7 @@ def run_interproscan(input_fasta, output_file):
         if not interproscan_path:
             raise EnvironmentError("Please set the INTERPROSCAN_PATH environment variable.")
 
-        # Step 3: Construct the InterProScan command
+        # Step 3: Construct the InterProScan command with --disable-precalc
         cmd = [
             os.path.join(interproscan_path, "interproscan.sh"),
             "-i", truncated_fasta,
@@ -73,7 +76,8 @@ def run_interproscan(input_fasta, output_file):
             "-f", "tsv",
             "-goterms",
             "-iprlookup",
-            "--cpu", "4"
+            "--cpu", "4",
+            "--disable-precalc"  # Prevents InterProScan from using its database for extra hits
         ]
 
         # Step 4: Run InterProScan
