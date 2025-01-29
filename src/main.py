@@ -35,32 +35,32 @@ def main(input_fasta, output_dir):
     try:
         # Step 1: Run HMMER analysis
         hmmer_output = os.path.join(output_dir, "hmmer_results.txt")
-        print("[Step 1] Running HMMER analysis...")
+        print("Step 1: Running HMMER analysis...")
         run_hmmer(input_fasta, hmmer_output)
         print(f"HMMER results saved to: {hmmer_output}")
 
         # Step 2: Filter HMMER results
         filtered_hmmer_output = os.path.join(output_dir, "filtered_hmmer_results.txt")
-        print("\n[Step 2] Filtering HMMER results...")
+        print("\nStep 2: Filtering HMMER results...")
         filter_hmmer_results(hmmer_output, filtered_hmmer_output)
         print(f"Filtered HMMER results saved to: {filtered_hmmer_output}")
 
         # Step 3: Extract protein sequences for InterProScan
         filtered_fasta_output = os.path.join(output_dir, "filtered_sequences.fasta")
-        print("\n[Step 3] Extracting protein sequences...")
+        print("\nStep 3: Extracting protein sequences...")
         extract_sequences(filtered_hmmer_output, input_fasta, filtered_fasta_output)
         print(f"Filtered sequences saved to: {filtered_fasta_output}")
 
         # Step 4: Run InterProScan
         interproscan_output = os.path.join(output_dir, "interproscan_results.tsv")
-        print("\n[Step 4] Running InterProScan...")
+        print("\nStep 4: Running InterProScan...")
         run_interproscan(filtered_fasta_output, interproscan_output)
         print(f"InterProScan results saved to: {interproscan_output}")
 
         # Step 5: Generate final report and filtered TSV
         report_output = os.path.join(output_dir, "GMFPIdentifier_report.txt")
         tsv_output = os.path.join(output_dir, "GMFPIdentifier_results.tsv")
-        print("\n[Step 5] Generating final report and TSV...")
+        print("\nStep 5: Generating final report and TSV...")
 
         # Calculate runtime and pass it to the report generation function
         end_time = time.time()
