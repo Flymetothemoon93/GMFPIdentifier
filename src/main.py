@@ -57,15 +57,18 @@ def main(input_fasta, output_dir):
         run_interproscan(filtered_fasta_output, interproscan_output)
         print(f"InterProScan results saved to: {interproscan_output}")
 
-        # Step 5: Generate final report
+        # Step 5: Generate final report and filtered TSV
         report_output = os.path.join(output_dir, "FPIdentifier_report.txt")
-        print("\n[Step 5] Generating final report...")
-        
+        tsv_output = os.path.join(output_dir, "FPIdentifier_results.tsv")
+        print("\n[Step 5] Generating final report and TSV...")
+
         # Calculate runtime and pass it to the report generation function
         end_time = time.time()
         runtime_seconds = end_time - start_time
-        generate_report(interproscan_output, report_output, transposon_json, runtime_seconds)
+
+        generate_report(interproscan_output, report_output, tsv_output, transposon_json, runtime_seconds)
         print(f"Final report saved to: {report_output}")
+        print(f"Filtered TSV saved to: {tsv_output}")
 
         print("\nPipeline completed successfully. Results are saved in the specified output directory.")
     
