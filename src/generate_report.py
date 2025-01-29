@@ -36,8 +36,6 @@ def generate_report(input_file, output_report, output_tsv, transposon_json, runt
     try:
         with open(input_file, 'r') as file:
             reader = csv.reader(file, delimiter='\t')
-            header = next(reader)  # Read the header
-            matched_rows.append(header)  # Keep the header for the output file
 
             for row in reader:
                 total_proteins += 1
