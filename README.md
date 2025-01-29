@@ -7,7 +7,7 @@ GMFPIdentifier (Gene Model False Positives Identifier) is a bioinformatics tool 
 - Identify transposable element proteins from protein sequences using HMMER and GyDB profiles.
 - Filter and extract high-confidence TE protein sequences.
 - Validate HMMER results with InterProScan to eliminate false positives.
-- Generate a detailed report summarizing identified transposon-related proteins and a TSV file containing their functional annotations.
+- Generate a detailed report and a TSV file summarizing identified transposon-related proteins
 
 ## Prerequisites
 
