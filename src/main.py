@@ -58,8 +58,8 @@ def main(input_fasta, output_dir):
         print(f"InterProScan results saved to: {interproscan_output}")
 
         # Step 5: Generate final report and filtered TSV
-        report_output = os.path.join(output_dir, "FPIdentifier_report.txt")
-        tsv_output = os.path.join(output_dir, "FPIdentifier_results.tsv")
+        report_output = os.path.join(output_dir, "GMFPIdentifier_report.txt")
+        tsv_output = os.path.join(output_dir, "GMFPIdentifier_results.tsv")
         print("\n[Step 5] Generating final report and TSV...")
 
         # Calculate runtime and pass it to the report generation function
