@@ -1,15 +1,13 @@
 # FPIdentifier
 
-GMFPIdentifier (Gene Model False Positives Identifier) is a bioinformatics tool designed to identify transposable elements (TEs) that may be misidentified as genes in genomic annotations. The tool utilizes HMMER to scan protein sequences against the GyDB database, detecting potential transposon-related domains. InterProScan is then used to validate these results, ensuring that the proteins identified by HMMER as TEs are indeed transposon-related, thereby reducing false positives.
-
-The tool ultimately generates a detailed report summarizing the identified transposon-related proteins, along with a TSV file containing their functional annotations.
+GMFPIdentifier (Gene Model False Positives Identifier) is a bioinformatics tool designed to identify transposable elements (TEs) that may be misidentified as genes in genomic annotations. The tool utilizes HMMER to scan protein sequences against the GyDB database, detecting potential transposon-related domains. InterProScan is then used to validate these results, ensuring that the proteins identified by HMMER as TEs are indeed transposon-related, thereby reducing false positives. The tool ultimately generates a detailed report summarizing the identified transposon-related proteins, along with a TSV file containing their InterProScan-based functional annotations.
 
 ## Features
 
 - Identify transposable element proteins from protein sequences using HMMER and GyDB profiles.
 - Filter and extract high-confidence TE protein sequences.
 - Validate HMMER results with InterProScan to eliminate false positives.
-- Generate a detailed report summarizing identified transposon-related proteins and a TSV file containing their InterProScan-based functional annotations.
+- Generate a detailed report summarizing identified transposon-related proteins and a TSV file containing their functional annotations.
 
 ## Prerequisites
 
