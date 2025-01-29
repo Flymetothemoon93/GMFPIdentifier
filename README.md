@@ -83,7 +83,7 @@ GMFPIdentifier (Gene Model False Positives Identifier) is a bioinformatics tool 
 
 ## How to Use
 
-Run FPIdentifier with your input files:
+Run GMFPIdentifier with your input files:
 
 ```bash
 python src/main.py --input your_protein_sequences.fasta --output results
@@ -101,6 +101,7 @@ This command will:
 3. Extract relevant protein sequences for further analysis.
 4. Run InterProScan to confirm that the filtered sequences are true transposon-related proteins, removing false positives.
 5. Generate a detailed report summarizing the analysis, including the runtime, detected transposon-related proteins, and their descriptions.
+6. Output an InterProScan TSV file, containing domain annotations for all detected transposable element proteins.
 
 ## Troubleshooting
 
