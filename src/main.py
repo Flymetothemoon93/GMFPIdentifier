@@ -35,7 +35,7 @@ def main(input_fasta, output_dir):
     try:
         # Step 1: Run HMMER analysis
         hmmer_output = os.path.join(output_dir, "hmmer_results.txt")
-        print("\n[Step 1] Running HMMER analysis...")
+        print("[Step 1] Running HMMER analysis...")
         run_hmmer(input_fasta, hmmer_output)
         print(f"HMMER results saved to: {hmmer_output}")
 
