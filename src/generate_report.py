@@ -57,10 +57,10 @@ def generate_report(input_file, output_report, output_tsv, transposon_json, runt
     # Write the detailed report (text format)
     try:
         with open(output_report, 'w') as report:
-            report.write("FPIdentifier Report\n")
+            report.write("GMFPIdentifier Report\n")
             report.write("===================\n")
             report.write("Purpose:\n")
-            report.write("FPIdentifier detects transposable proteins (False Positives) in the input protein sequences.\n\n")
+            report.write("GMFPIdentifier detects transposable proteins (False Positives) in the input protein sequences.\n\n")
             report.write(f"Pipeline Runtime: {formatted_runtime}\n\n")  # Display runtime
             report.write("Results:\n")
             
