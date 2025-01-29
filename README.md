@@ -19,7 +19,7 @@ GMFPIdentifier (Gene Model False Positives Identifier) is a bioinformatics tool 
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/Flymetothemoon93/FPIdentifier.git
+   git clone https://github.com/Flymetothemoon93/GMFPIdentifier.git
    cd FPIdentifier
    ```
 
