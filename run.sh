@@ -33,14 +33,17 @@ mkdir -p "$OUTPUT_DIR"
 if [ "$USE_SINGULARITY" = true ]; then
     echo "Running with Singularity..."
     
+    # Set Singularity image path inside the output directory
+    SINGULARITY_IMAGE="$OUTPUT_DIR/gmfpid.sif"
+
     # Pull the Singularity image if not exists
-    if [ ! -f "gmfpid.sif" ]; then
-        echo "Downloading gmfpid.sif..."
-        singularity pull gmfpid.sif docker://flymetothemoon93/gmfpid:v1.0
+    if [ ! -f "$SINGULARITY_IMAGE" ]; then
+        echo "Downloading gmfpid.sif to $OUTPUT_DIR..."
+        singularity pull "$SINGULARITY_IMAGE" docker://flymetothemoon93/gmfpid:v1.0
     fi
     
     # Run Singularity with proper bindings
-    singularity run --bind "$OUTPUT_DIR:/app/output_data" gmfpid.sif \
+    singularity run --bind "$OUTPUT_DIR:/app/output_data" "$SINGULARITY_IMAGE" \
         --input "$INPUT_FILE" \
         --output /app/output_data
 
@@ -49,7 +52,7 @@ else
     docker run --rm \
         -v "$(dirname "$INPUT_FILE"):/app/input_data" \
         -v "$OUTPUT_DIR:/app/output_data" \
-        flymetothemoon93/gmfpid:latest \
+        flymetothemoon93/gmfpid:v1.0 \
         --input "/app/input_data/$INPUT_FILENAME" \
         --output "/app/output_data"
 fi
