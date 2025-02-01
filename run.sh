@@ -36,7 +36,7 @@ if [ "$USE_SINGULARITY" = true ]; then
     # Pull the Singularity image if not exists
     if [ ! -f "gmfpid.sif" ]; then
         echo "Downloading gmfpid.sif..."
-        singularity pull gmfpid.sif docker://flymetothemoon93/gmfpid:latest
+        singularity pull gmfpid.sif docker://flymetothemoon93/gmfpid:v1.0
     fi
     
     # Run Singularity with proper bindings
