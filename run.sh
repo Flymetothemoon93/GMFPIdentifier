@@ -8,9 +8,12 @@ if [ $# -lt 2 ]; then
 fi
 
 # Read user input
-INPUT_FILE="$1"
-OUTPUT_DIR="$2"
+INPUT_FILE="$(realpath "$1")"  # Convert to absolute path
+OUTPUT_DIR="$(realpath "$2")"
 USE_SINGULARITY=false
+
+# Extract filename from the input path
+INPUT_FILENAME=$(basename "$INPUT_FILE")
 
 # Check if an optional third parameter (--use-singularity) is provided
 if [ "$3" == "--use-singularity" ]; then
@@ -29,16 +32,26 @@ mkdir -p "$OUTPUT_DIR"
 # Run with Docker or Singularity
 if [ "$USE_SINGULARITY" = true ]; then
     echo "Running with Singularity..."
-    singularity run gmfpid.sif --input "$INPUT_FILE" --output "$OUTPUT_DIR"
+    
+    # Pull the Singularity image if not exists
+    if [ ! -f "gmfpid.sif" ]; then
+        echo "Downloading gmfpid.sif..."
+        singularity pull gmfpid.sif docker://flymetothemoon93/gmfpid:latest
+    fi
+    
+    # Run Singularity with proper bindings
+    singularity run --bind "$OUTPUT_DIR:/app/output_data" gmfpid.sif \
+        --input "$INPUT_FILE" \
+        --output /app/output_data
+
 else
     echo "Running with Docker..."
     docker run --rm \
-        -v "$(pwd)/$INPUT_FILE:/app/input.fasta" \
-        -v "$(pwd)/$OUTPUT_DIR:/app/output_data" \
+        -v "$(dirname "$INPUT_FILE"):/app/input_data" \
+        -v "$OUTPUT_DIR:/app/output_data" \
         flymetothemoon93/gmfpid:latest \
-        --input /app/input.fasta \
-        --output /app/output_data
+        --input "/app/input_data/$INPUT_FILENAME" \
+        --output "/app/output_data"
 fi
 
 echo "Process completed! Results are saved in '$OUTPUT_DIR'"
-
