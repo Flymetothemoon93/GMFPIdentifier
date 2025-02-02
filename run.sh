@@ -70,11 +70,11 @@ if [ "$USE_SINGULARITY" = true ]; then
 else
     echo "Running with Docker..."
     docker run --rm \
-        -v "$(dirname "$INPUT_FILE"):/app/input_data" \
-        -v "$OUTPUT_DIR:/app/output_data" \
-        flymetothemoon93/gmfpid:v1.0 \
-        --input "/app/input_data/$INPUT_FILENAME" \
-        --output "/app/output_data"
+    -v "$(dirname "$INPUT_FILE"):/app/input_data" \
+    -v "$OUTPUT_DIR:/app/output_data" \
+    flymetothemoon93/gmfpid:v1.0 \
+    --input "/app/input_data/$(basename "$INPUT_FILE")" \
+    --output "/app/output_data"
 fi
 
 echo "Process completed! Results are saved in '$OUTPUT_DIR'"
