@@ -62,9 +62,8 @@ if [ "$USE_SINGULARITY" = true ]; then
     fi
     
     # Run Singularity with proper bindings
-    singularity run --bind "$OUTPUT_DIR:/testoutput" "$SINGULARITY_IMAGE" \
-        --input "$INPUT_FILE" \
-        --output /testoutput
+    singularity run --bind "$(dirname "$INPUT_FILE"):/testdata" --bind "$OUTPUT_DIR:/testoutput" "$SINGULARITY_IMAGE" \
+        /app/run.sh "/testdata/$INPUT_FILENAME" "/testoutput"
 
 else
     echo "Running with Docker..."
@@ -72,8 +71,7 @@ else
         -v "$(dirname "$INPUT_FILE"):/testdata" \
         -v "$OUTPUT_DIR:/testoutput" \
         flymetothemoon93/gmfpid:v1.0 \
-        /app/run.sh "/testdata/$(basename "$INPUT_FILE")" "/testoutput"
+        /bin/bash -c "/app/run.sh /testdata/$INPUT_FILENAME /testoutput"
 fi
-
 
 echo "Process completed! Results are saved in '$OUTPUT_DIR'"
