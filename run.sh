@@ -71,9 +71,8 @@ else
     docker run --rm \
         -v "$(dirname "$INPUT_FILE"):/testdata" \
         -v "$OUTPUT_DIR:/testoutput" \
-        flymetothemoon93/gmfpid:v1.0 \
-        --input "/testdata/$INPUT_FILENAME" \
-        --output "/testoutput"
+        flymetothemoon93/gmfpid:v1.0 bash -c \
+        "/gmfpid --input /testdata/$INPUT_FILENAME --output /testoutput"
 fi
 
 echo "Process completed! Results are saved in '$OUTPUT_DIR'"
