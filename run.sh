@@ -12,13 +12,32 @@ echo "DEBUG: Raw input file argument: $1"
 echo "DEBUG: Raw output directory argument: $2"
 
 # Convert to absolute path safely
-INPUT_FILE="$(realpath "$1" 2>/dev/null || echo "$1")"
-OUTPUT_DIR="$(realpath "$2" 2>/dev/null || echo "$2")"
+if [[ "$1" != -* ]]; then
+    INPUT_FILE="$(realpath "$1" 2>/dev/null || echo "$1")"
+else
+    echo "Error: First argument should be the input file, but got '$1'."
+    exit 1
+fi
+
+if [[ "$2" != -* ]]; then
+    OUTPUT_DIR="$(realpath "$2" 2>/dev/null || echo "$2")"
+else
+    echo "Error: Second argument should be the output directory, but got '$2'."
+    exit 1
+fi
 
 echo "DEBUG: Resolved input file path: $INPUT_FILE"
 echo "DEBUG: Resolved output directory path: $OUTPUT_DIR"
 
 USE_SINGULARITY=false
+
+# Extract filename from the input path
+INPUT_FILENAME=$(basename "$INPUT_FILE")
+
+# Check if an optional third parameter (--use-singularity) is provided
+if [ "$3" == "--use-singularity" ]; then
+    USE_SINGULARITY=true
+fi
 
 # Validate that the input file exists
 if [ ! -f "$INPUT_FILE" ]; then
@@ -29,16 +48,31 @@ fi
 # Ensure the output directory exists
 mkdir -p "$OUTPUT_DIR"
 
-# Debugging: Check if input directory exists
-echo "DEBUG: Checking if input directory exists: $(dirname "$INPUT_FILE")"
-ls -l "$(dirname "$INPUT_FILE")"
+# Run with Docker or Singularity
+if [ "$USE_SINGULARITY" = true ]; then
+    echo "Running with Singularity..."
+    
+    # Set Singularity image path inside the output directory
+    SINGULARITY_IMAGE="$OUTPUT_DIR/gmfpid.sif"
 
-# Run with Docker
-echo "Running with Docker..."
-docker run --rm -it \
-    -v "$(dirname "$INPUT_FILE"):/app/input_data" \
-    -v "$OUTPUT_DIR:/app/output_data" \
+    # Pull the Singularity image if not exists
+    if [ ! -f "$SINGULARITY_IMAGE" ]; then
+        echo "Downloading gmfpid.sif to $OUTPUT_DIR..."
+        singularity pull "$SINGULARITY_IMAGE" docker://flymetothemoon93/gmfpid:v1.0
+    fi
+    
+    # Run Singularity with proper bindings
+    singularity run --bind "$OUTPUT_DIR:/testoutput" "$SINGULARITY_IMAGE" \
+        --input "$INPUT_FILE" \
+        --output /testoutput
+
+else
+    echo "Running with Docker..."
+    docker run --rm \
+    -v "$INPUT_FILE:/testdata/input.fasta" \
+    -v "$OUTPUT_DIR:/testoutput" \
     flymetothemoon93/gmfpid:v1.0 \
-    bash -c "ls -l /app/input_data && ls -l /app/output_data && python3 /app/src/main.py --input /app/input_data/$(basename "$INPUT_FILE") --output /app/output_data"
+    /app/run.sh "/testdata/input.fasta" "/testoutput"
+fi
 
 echo "Process completed! Results are saved in '$OUTPUT_DIR'"
