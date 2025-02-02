@@ -61,7 +61,7 @@ if [ "$USE_SINGULARITY" = true ]; then
     # Pull Singularity image if not exists
     if [ ! -f "$SINGULARITY_IMAGE" ]; then
         echo "Downloading gmfpid.sif to $OUTPUT_DIR..."
-        singularity pull "$SINGULARITY_IMAGE" docker://flymetothemoon93/gmfpid:latest
+        singularity pull "$SINGULARITY_IMAGE" docker://flymetothemoon93/gmfpid:v1.0
     fi
     
     # Run with Singularity
@@ -74,7 +74,7 @@ else
     docker run --rm \
         -v "$(dirname "$INPUT_FILE"):/app/input_data" \
         -v "$OUTPUT_DIR:/app/output_data" \
-        flymetothemoon93/gmfpid:latest \
+        flymetothemoon93/gmfpid:v1.0 \
         --input "/app/input_data/$INPUT_FILENAME" \
         --output "/app/output_data"
 fi
