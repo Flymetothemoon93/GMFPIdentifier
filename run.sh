@@ -39,7 +39,11 @@ fi
 # Extract filename from the input path
 INPUT_FILENAME=$(basename "$INPUT_FILE")
 
+# Convert input directory to absolute path for Docker/Singularity volume binding
+INPUT_DIR="$(cd "$(dirname "$INPUT_FILE")" && pwd)"
+
 echo "DEBUG: Resolved input file path: $INPUT_FILE"
+echo "DEBUG: Resolved input directory path: $INPUT_DIR"
 echo "DEBUG: Resolved output directory path: $OUTPUT_DIR"
 
 # Check if input file exists
@@ -55,24 +59,25 @@ mkdir -p "$OUTPUT_DIR"
 if [ "$USE_SINGULARITY" = true ]; then
     echo "Running with Singularity..."
     
-    # Define Singularity image path
-    SINGULARITY_IMAGE="$OUTPUT_DIR/gmfpid.sif"
+    # Define Singularity image path in a fixed location
+    SINGULARITY_IMAGE="$HOME/.singularity/gmfpid.sif"
+    mkdir -p "$HOME/.singularity"
 
     # Pull Singularity image if not exists
     if [ ! -f "$SINGULARITY_IMAGE" ]; then
-        echo "Downloading gmfpid.sif to $OUTPUT_DIR..."
+        echo "Downloading gmfpid.sif to $HOME/.singularity..."
         singularity pull "$SINGULARITY_IMAGE" docker://flymetothemoon93/gmfpid:v1.0
     fi
     
     # Run with Singularity
-    singularity run --bind "$(dirname "$INPUT_FILE"):/app/input_data" --bind "$OUTPUT_DIR:/app/output_data" "$SINGULARITY_IMAGE" \
+    singularity run --bind "$INPUT_DIR:/app/input_data" --bind "$OUTPUT_DIR:/app/output_data" "$SINGULARITY_IMAGE" \
         --input "/app/input_data/$INPUT_FILENAME" \
         --output "/app/output_data"
 
 else
     echo "Running with Docker..."
     docker run --rm \
-        -v "$(dirname "$INPUT_FILE"):/app/input_data" \
+        -v "$INPUT_DIR:/app/input_data" \
         -v "$OUTPUT_DIR:/app/output_data" \
         flymetothemoon93/gmfpid:v1.0 \
         --input "/app/input_data/$INPUT_FILENAME" \
