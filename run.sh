@@ -8,8 +8,8 @@ if [ $# -lt 2 ]; then
 fi
 
 # Read user input
-INPUT_FILE="$(realpath "$1")"  # Convert to absolute path
-OUTPUT_DIR="$(realpath "$2")"
+INPUT_FILE="$(readlink -f "$1")"
+OUTPUT_DIR="$(readlink -f "$2")"
 USE_SINGULARITY=false
 
 # Extract filename from the input path
