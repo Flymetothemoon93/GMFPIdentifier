@@ -11,9 +11,21 @@ fi
 echo "DEBUG: Raw input file argument: $1"
 echo "DEBUG: Raw output directory argument: $2"
 
-# Convert to absolute path
-INPUT_FILE="$(realpath "$1" 2>/dev/null || echo "$1")"
-OUTPUT_DIR="$(realpath "$2" 2>/dev/null || echo "$2")"
+# Convert to absolute path safely
+if [[ "$1" != -* ]]; then
+    INPUT_FILE="$(realpath "$1" 2>/dev/null || echo "$1")"
+else
+    echo "Error: First argument should be the input file, but got '$1'."
+    exit 1
+fi
+
+if [[ "$2" != -* ]]; then
+    OUTPUT_DIR="$(realpath "$2" 2>/dev/null || echo "$2")"
+else
+    echo "Error: Second argument should be the output directory, but got '$2'."
+    exit 1
+fi
+
 
 echo "DEBUG: Resolved input file path: $INPUT_FILE"
 echo "DEBUG: Resolved output directory path: $OUTPUT_DIR"
