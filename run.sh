@@ -26,7 +26,6 @@ else
     exit 1
 fi
 
-
 echo "DEBUG: Resolved input file path: $INPUT_FILE"
 echo "DEBUG: Resolved output directory path: $OUTPUT_DIR"
 
@@ -63,18 +62,18 @@ if [ "$USE_SINGULARITY" = true ]; then
     fi
     
     # Run Singularity with proper bindings
-    singularity run --bind "$OUTPUT_DIR:/app/output_data" "$SINGULARITY_IMAGE" \
+    singularity run --bind "$OUTPUT_DIR:/testoutput" "$SINGULARITY_IMAGE" \
         --input "$INPUT_FILE" \
-        --output /app/output_data
+        --output /testoutput
 
 else
     echo "Running with Docker..."
     docker run --rm \
-    -v "$(dirname "$INPUT_FILE"):/app/input_data" \
-    -v "$OUTPUT_DIR:/app/output_data" \
-    flymetothemoon93/gmfpid:v1.0 \
-    --input "/app/input_data/$(basename "$INPUT_FILE")" \
-    --output "/app/output_data"
+        -v "$(dirname "$INPUT_FILE"):/testdata" \
+        -v "$OUTPUT_DIR:/testoutput" \
+        flymetothemoon93/gmfpid:v1.0 \
+        --input "/testdata/$INPUT_FILENAME" \
+        --output "/testoutput"
 fi
 
 echo "Process completed! Results are saved in '$OUTPUT_DIR'"
