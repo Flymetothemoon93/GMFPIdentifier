@@ -12,8 +12,8 @@ echo "DEBUG: Raw input file argument: $1"
 echo "DEBUG: Raw output directory argument: $2"
 
 # Convert to absolute path
-INPUT_FILE="$(readlink -f "$1" 2>/dev/null || realpath "$1")"
-OUTPUT_DIR="$(readlink -f "$2" 2>/dev/null || realpath "$2")"
+INPUT_FILE="$(realpath "$1" 2>/dev/null || echo "$1")"
+OUTPUT_DIR="$(realpath "$2" 2>/dev/null || echo "$2")"
 
 echo "DEBUG: Resolved input file path: $INPUT_FILE"
 echo "DEBUG: Resolved output directory path: $OUTPUT_DIR"
