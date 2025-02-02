@@ -80,7 +80,7 @@ else
         -v "$INPUT_DIR:/app/input_data" \
         -v "$OUTPUT_DIR:/app/output_data" \
         flymetothemoon93/gmfpid:v1.0 \
-        /bin/bash -c "/app/run.sh \"/app/input_data/$INPUT_FILENAME\" \"/app/output_data\""
+        /app/run.sh "/app/input_data/$INPUT_FILENAME" "/app/output_data"
 fi
 
 echo "Process completed! Results are saved in '$OUTPUT_DIR'"
