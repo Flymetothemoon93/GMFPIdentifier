@@ -21,23 +21,12 @@ echo "DEBUG: Raw input file argument: $INPUT_ARG"
 echo "DEBUG: Raw output directory argument: $OUTPUT_ARG"
 
 # Convert input path to absolute
-if [[ "$INPUT_ARG" != -* ]]; then
-    INPUT_FILE="$(realpath "$INPUT_ARG" 2>/dev/null || echo "$INPUT_ARG")"
-else
-    echo "Error: First argument should be the input file, but got '$INPUT_ARG'."
-    exit 1
-fi
-
-# Convert output path to absolute
-if [[ "$OUTPUT_ARG" != -* ]]; then
-    OUTPUT_DIR="$(realpath "$OUTPUT_ARG" 2>/dev/null || echo "$OUTPUT_ARG")"
-else
-    echo "Error: Second argument should be the output directory, but got '$OUTPUT_ARG'."
-    exit 1
-fi
+INPUT_FILE="$(realpath "$INPUT_ARG" 2>/dev/null || echo "$INPUT_ARG")"
+OUTPUT_DIR="$(realpath "$OUTPUT_ARG" 2>/dev/null || echo "$OUTPUT_ARG")"
 
 # Extract filename from the input path
 INPUT_FILENAME=$(basename "$INPUT_FILE")
+INPUT_DIR=$(dirname "$INPUT_FILE")
 
 echo "DEBUG: Resolved input file path: $INPUT_FILE"
 echo "DEBUG: Resolved output directory path: $OUTPUT_DIR"
@@ -51,7 +40,7 @@ fi
 # Ensure the output directory exists
 mkdir -p "$OUTPUT_DIR"
 
-# Decide whether to use Singularity or Docker
+# Run with Docker or Singularity
 if [ "$USE_SINGULARITY" = true ]; then
     echo "Running with Singularity..."
     
@@ -65,18 +54,17 @@ if [ "$USE_SINGULARITY" = true ]; then
     fi
     
     # Run with Singularity
-    singularity run --bind "$(dirname "$INPUT_FILE"):/app/input_data" --bind "$OUTPUT_DIR:/app/output_data" "$SINGULARITY_IMAGE" \
+    singularity run --bind "$INPUT_DIR:/app/input_data" --bind "$OUTPUT_DIR:/app/output_data" "$SINGULARITY_IMAGE" \
         --input "/app/input_data/$INPUT_FILENAME" \
         --output "/app/output_data"
 
 else
     echo "Running with Docker..."
     docker run --rm \
-        -v "$(dirname "$INPUT_FILE"):/app/input_data" \
+        -v "$INPUT_DIR:/app/input_data" \
         -v "$OUTPUT_DIR:/app/output_data" \
         flymetothemoon93/gmfpid:v1.0 \
-        --input "/app/input_data/$INPUT_FILENAME" \
-        --output "/app/output_data"
+        "/app/run.sh" "/app/input_data/$INPUT_FILENAME" "/app/output_data"
 fi
 
 echo "Process completed! Results are saved in '$OUTPUT_DIR'"
