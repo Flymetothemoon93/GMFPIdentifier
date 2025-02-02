@@ -8,8 +8,16 @@ if [ $# -lt 2 ]; then
 fi
 
 # Read user input
-INPUT_FILE="$(readlink -f "$1")"
-OUTPUT_DIR="$(readlink -f "$2")"
+echo "DEBUG: Raw input file argument: $1"
+echo "DEBUG: Raw output directory argument: $2"
+
+# Convert to absolute path
+INPUT_FILE="$(readlink -f "$1" 2>/dev/null || realpath "$1")"
+OUTPUT_DIR="$(readlink -f "$2" 2>/dev/null || realpath "$2")"
+
+echo "DEBUG: Resolved input file path: $INPUT_FILE"
+echo "DEBUG: Resolved output directory path: $OUTPUT_DIR"
+
 USE_SINGULARITY=false
 
 # Extract filename from the input path
