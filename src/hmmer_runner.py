@@ -1,19 +1,20 @@
 import subprocess
 import os
 
-def run_hmmer(protein_sequences, output_file):
+def run_hmmer(protein_sequences, output_file, threads=1):
     """
     Runs the HMMER tool to scan the provided protein sequences using HMM models from GyDB.
-    
+
     Parameters:
     - protein_sequences (str): Path to the input protein sequences in FASTA format.
     - output_file (str): Path where the hmmer_results.txt should be saved.
-    
+    - threads (int): Number of CPU threads to use (default: 1).
+
     Returns:
     - None: Outputs the results to a file in the specified output path.
     """
     
-    print("HMMER process started...")
+    print(f"HMMER process started with {threads} threads...")
     
     # Define the HMM model directory
     hmm_model_dir = 'database/GyDB'
@@ -53,10 +54,10 @@ def run_hmmer(protein_sequences, output_file):
             print(f"Processing HMM file: {hmm_file_path}")
             
             # Construct the HMMER command for each HMM file and store result in a temporary file
-            cmd = f"hmmscan --domtblout {temp_output_file} {hmm_file_path} {protein_sequences}"
+            cmd = f"hmmscan --cpu {threads} --domtblout {temp_output_file} {hmm_file_path} {protein_sequences}"
             try:
                 # Run HMMER and write the results to the temporary file
-                subprocess.run(cmd, shell=True, check=True,stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                subprocess.run(cmd, shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 print(f"Completed HMM file: {hmm_file_path}")
 
                 # Append the temporary results to the final output file (in text mode)
