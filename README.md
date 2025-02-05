@@ -122,9 +122,7 @@ Verify installation:
 hmmscan -h
 ```
 
----
-
-## 🏗️ Download and Install InterProScan
+### 4️⃣ Download and Install InterProScan
 
 Download InterProScan from the official site. You can use the following command to download version 5.70-102.0:
 
