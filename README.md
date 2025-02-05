@@ -23,9 +23,7 @@ docker run \
 -v $(pwd)/your_input_folder:/app/input_data \
 -v $(pwd)/your_output_folder:/app/output_data \
 flymetothemoon93/gmfpid:latest \
---input /app/input_data/
-
-your_input.fasta \
+--input /app/input_data/your_input.fasta \
 --output /app/output_data/results
 ```
 
