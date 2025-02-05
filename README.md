@@ -33,7 +33,7 @@ flymetothemoon93/gmfpid:latest \
 |-----------|------------|
 | `-v $(pwd)/your_input_folder:/app/input_data` | Mounts your **local input data folder** to the container. |
 | `-v $(pwd)/your_output_folder:/app/output_data` | Mounts your **output folder** to retrieve results. |
-| `--input /app/input_data/your_input.fasta` | Specifies the **input FASTA** file. |
+| `--input /app/input_data/your_input.fasta` | Specifies the **input PROTEIN FASTA** file. |
 | `--output /app/output_data/results` | Defines the **directory** where results will be saved. |
 
 ### 📌 Example Usage
