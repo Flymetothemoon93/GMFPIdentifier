@@ -54,7 +54,7 @@ def run_hmmer(protein_sequences, output_file, threads=1):
             print(f"Processing HMM file: {hmm_file_path}")
             
             # Construct the HMMER command for each HMM file and store result in a temporary file
-            cmd = f"hmmscan --cpu {threads} --domtblout {output_file} database/GyDB/*.hmm {protein_sequences}"
+            cmd = f"hmmscan --cpu {threads} --domtblout {temp_output_file} {hmm_file_path} {protein_sequences}"
             try:
                 # Run HMMER and write the results to the temporary file
                 subprocess.run(cmd, shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
