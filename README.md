@@ -19,7 +19,7 @@ docker pull flymetothemoon93/gmfpid:latest
 To run GMFPIdentifier, use the following command:
 
 ```bash
-docker run --rm \
+docker run \
 -v $(pwd)/your_input_folder:/app/input_data \
 -v $(pwd)/your_output_folder:/app/output_data \
 flymetothemoon93/gmfpid:latest \
@@ -43,7 +43,7 @@ your_input.fasta \
 If you have an input FASTA file called `Athaliana_with_Gypsy.fa` stored in your `testdata` directory, you can run:
 
 ```bash
-docker run --rm \
+docker run \
 -v $(pwd)/testdata:/app/input_data \
 -v $(pwd)/testoutput:/app/output_data \
 flymetothemoon93/gmfpid:latest \
