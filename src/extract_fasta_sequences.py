@@ -23,7 +23,7 @@ def extract_sequences(filtered_results_file, protein_sequences_file, output_fast
                     protein_id = fields[3]
                     filtered_ids.add(protein_id)
 
-        # Debug: Print the filtered IDs to ensure we have the correct ones
+        # Debug: Print the filtered IDs
         print("Filtered IDs:", filtered_ids)
 
         # Extract and write matching sequences to the output FASTA file
