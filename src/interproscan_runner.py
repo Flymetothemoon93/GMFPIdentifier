@@ -43,19 +43,20 @@ def restore_fasta_ids(output_tsv, id_mapping, original_ids, restored_tsv):
                         columns[0] = original_id
                 output_handle.write("\t".join(columns) + "\n")
 
-def run_interproscan(input_fasta, output_file):
+def run_interproscan(input_fasta, output_file, threads=1):
     """
     Runs InterProScan on a given FASTA file and saves the results to an output file.
 
     Parameters:
     - input_fasta (str): Path to the input FASTA file containing sequences for InterProScan.
     - output_file (str): Path where the InterProScan results should be saved.
+    - threads (int): Number of CPU threads to use (default: 1).
 
     Returns:
     - None
     """
     try:
-        print("Running InterProScan with ID truncation...")
+        print(f"Running InterProScan with ID truncation using {threads} threads...")
 
         # Temporary file paths
         truncated_fasta = input_fasta + ".truncated"
@@ -69,7 +70,7 @@ def run_interproscan(input_fasta, output_file):
         if not interproscan_path:
             raise EnvironmentError("Please set the INTERPROSCAN_PATH environment variable.")
 
-        # Step 3: Construct the InterProScan command with --disable-precalc
+        # Step 3: Construct the InterProScan command with user-specified threads
         cmd = [
             os.path.join(interproscan_path, "interproscan.sh"),
             "-i", truncated_fasta,
@@ -77,7 +78,7 @@ def run_interproscan(input_fasta, output_file):
             "-f", "tsv",
             "-goterms",
             "-iprlookup",
-            "--cpu", "4",
+            "--cpu", str(threads),
             "--disable-precalc"
         ]
 
