@@ -6,13 +6,9 @@ from extract_fasta_sequences import extract_sequences
 from interproscan_runner import run_interproscan
 from generate_report import generate_report
 
-def main(input_fasta, output_dir):
+def main(input_fasta, output_dir, threads):
     """
     Main function to run the pipeline.
-
-    Parameters:
-        input_fasta (str): Path to the input FASTA file containing protein sequences.
-        output_dir (str): Path to the output directory to save results.
     """
     # Start timing the pipeline
     start_time = time.time()
@@ -36,7 +32,7 @@ def main(input_fasta, output_dir):
         # Step 1: Run HMMER analysis
         hmmer_output = os.path.join(output_dir, "hmmer_results.txt")
         print("Step 1: Running HMMER analysis...")
-        run_hmmer(input_fasta, hmmer_output)
+        run_hmmer(input_fasta, hmmer_output, threads)
         print(f"HMMER results saved to: {hmmer_output}")
 
         # Step 2: Filter HMMER results
@@ -54,7 +50,7 @@ def main(input_fasta, output_dir):
         # Step 4: Run InterProScan
         interproscan_output = os.path.join(output_dir, "interproscan_results.tsv")
         print("\nStep 4: Running InterProScan...")
-        run_interproscan(filtered_fasta_output, interproscan_output)
+        run_interproscan(filtered_fasta_output, interproscan_output, threads)
         print(f"InterProScan results saved to: {interproscan_output}")
 
         # Step 5: Generate final report and filtered TSV
@@ -81,10 +77,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Automate transposon protein prediction and annotation pipeline.")
     parser.add_argument("--input", required=True, help="Path to the input protein sequences in FASTA format.")
     parser.add_argument("--output", required=True, help="Path to the output directory.")
+    parser.add_argument("--threads", type=int, default=1, help="Number of CPU threads to use (default: 1).")
     args = parser.parse_args()
 
     # Ensure the output directory exists
     if not os.path.exists(args.output):
         os.makedirs(args.output)
 
-    main(args.input, args.output)
+    main(args.input, args.output, args.threads)
+
