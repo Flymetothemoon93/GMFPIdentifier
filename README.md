@@ -14,7 +14,7 @@ You can easily run GMFPIdentifier using Docker **without manually installing dep
 docker pull flymetothemoon93/gmfpid:latest
 ```
 
-### 🏃‍♂️ 2. Run the Container
+### 🐳 2. Run the Container
 
 To run GMFPIdentifier, use the following command:
 
@@ -61,7 +61,7 @@ After the process completes, results will be stored in `testoutput/Athaliana_res
 
 ---
 
-## 📌 Prerequisites (For Manual Installation)
+## 📦 Prerequisites (For Manual Installation)
 If you prefer to run GMFPIdentifier **without Docker**, you'll need:
 
 - Python (3.6 or later, with required packages in `requirements.txt`)
