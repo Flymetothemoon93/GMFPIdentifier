@@ -11,7 +11,7 @@ You can easily run GMFPIdentifier using Docker **without manually installing dep
 ### 📥 1. Pull the Docker Image
 
 ```bash
-docker pull flymetothemoon93/gmfpid:latest
+docker pull flymetothemoon93/gmfpid:v1.0
 ```
 
 ### 🐳 2. Run the Container
