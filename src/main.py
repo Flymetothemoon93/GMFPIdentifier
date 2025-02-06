@@ -19,7 +19,7 @@ def main(input_fasta, output_dir, threads, json_path=None):
     else:
         # Use the default JSON file based on the environment
         docker_json_path = "/app/database/transposon_interpro.json"  # For Docker
-        local_json_path = os.path.join(current_dir, "../database/transposon_interpro.json")  # For local execution
+        local_json_path = os.path.abspath(os.path.join(current_dir, "../database/transposon_interpro.json"))
 
         # Prioritize the local JSON file if it exists; otherwise, use the Docker path
         transposon_json = local_json_path if os.path.exists(local_json_path) else docker_json_path
