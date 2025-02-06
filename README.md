@@ -36,6 +36,7 @@ flymetothemoon93/gmfpid:v1.0 \
 | `--input /app/input_data/your_input.fasta` | Specifies the **input PROTEIN FASTA** file. |
 | `--output /app/output_data/results` | Defines the **directory** where results will be saved. |
 | `--threads 4 (optional)` | Number of CPU threads to use. Default is 1 **(fastest)**. |
+| `--json /app/database/custom_transposon_interpro.json (optional)` | Use a **custom transposon database JSON file** instead of the default. |
 
 ### 📌 Example Usage
 
@@ -67,6 +68,27 @@ flymetothemoon93/gmfpid:v1.0 \
 **⚠️ Recommendation:**  
   **By default (without `--threads`), the program runs with `--threads 1`, which is the fastest option.**  
   Using multiple threads may not improve performance due to HMMER's I/O and CPU constraints.
+
+
+---
+### 🛠 Customizing the Transposon Database (`transposon_interpro.json`)
+By default, GMFPIdentifier uses **`/app/database/transposon_interpro.json`**, which includes known transposon-related proteins.
+
+If you want to **modify or extend the database**, you can provide your own JSON file.
+
+**How to Use a Custom JSON File in Docker**
+```bash
+docker run \
+-v $(pwd)/your_input_folder:/app/input_data \
+-v $(pwd)/your_output_folder:/app/output_data \
+-v $(pwd)/your_custom_json:/app/database \
+flymetothemoon93/gmfpid:v1.0 \
+--input /app/input_data/your_input.fasta \
+--output /app/output_data/results \
+--json /app/database/custom_transposon_interpro.json
+```
+
+This will **replace the default JSON** with your **custom** transposon detection database.
 
 ---
 
