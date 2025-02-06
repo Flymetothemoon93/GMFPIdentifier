@@ -23,8 +23,8 @@ def extract_sequences(filtered_results_file, protein_sequences_file, output_fast
                     protein_id = fields[3]
                     filtered_ids.add(protein_id)
 
-        # Debug: Print the filtered IDs
-        print("Filtered IDs:", filtered_ids)
+        # Print the filtered IDs
+        print("Filtered IDs:", filtered_ids, flush=True)
 
         # Extract and write matching sequences to the output FASTA file
         with open(output_fasta, 'w') as output_handle:
@@ -39,9 +39,9 @@ def extract_sequences(filtered_results_file, protein_sequences_file, output_fast
             if not matched:
                 print("No matching sequences found in the original FASTA file.")
 
-        print(f"Extracted sequences saved to {output_fasta}")
+        print(f"Extracted sequences saved to {output_fasta}", flush=True)
 
     except FileNotFoundError:
-        print(f"Error: The file {filtered_results_file} or {protein_sequences_file} was not found.")
+        print(f"Error: The file {filtered_results_file} or {protein_sequences_file} was not found.", flush=True)
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"An error occurred: {e}", flush=True)
