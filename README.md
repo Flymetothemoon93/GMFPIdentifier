@@ -65,7 +65,7 @@ flymetothemoon93/gmfpid:v1.0 \
 --output /app/output_data/Athaliana_results \
 --threads 4
   ```
-**⚠️ Recommendation:**  
+**Recommendation:**  
   **By default (without `--threads`), the program runs with `--threads 1`, which is the fastest option.**  
   Using multiple threads may not improve performance due to HMMER's I/O and CPU constraints.
 
