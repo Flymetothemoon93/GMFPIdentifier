@@ -56,7 +56,7 @@ def run_interproscan(input_fasta, output_file, threads=1):
     - None
     """
     try:
-        print(f"Running InterProScan with ID truncation using {threads} threads...")
+        print(f"Running InterProScan with ID truncation using {threads} threads...", flush=True)
 
         # Temporary file paths
         truncated_fasta = input_fasta + ".truncated"
@@ -83,17 +83,17 @@ def run_interproscan(input_fasta, output_file, threads=1):
 
         # Step 4: Run InterProScan
         subprocess.run(cmd, check=True)
-        print("InterProScan completed.")
+        print("InterProScan completed.", flush=True)
 
         # Step 5: Restore original IDs
         restore_fasta_ids(temp_output, id_mapping, original_ids, output_file)
-        print(f"Results saved to {output_file}")
+        print(f"Results saved to {output_file}", flush=True)
 
         # Cleanup
         os.remove(truncated_fasta)
         os.remove(temp_output)
 
     except subprocess.CalledProcessError as e:
-        print(f"InterProScan failed with error: {e}")
+        print(f"InterProScan failed with error: {e}", flush=True)
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"An error occurred: {e}", flush=True)
