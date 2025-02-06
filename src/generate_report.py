@@ -23,7 +23,7 @@ def generate_report(input_file, output_report, output_tsv, transposon_json, runt
         with open(transposon_json, 'r') as json_file:
             transposon_interpro_ids = json.load(json_file)
     except Exception as e:
-        print(f"Error loading transposon JSON file: {e}")
+        print(f"Error loading transposon JSON file: {e}", flush=True)
         return
 
     # Initialize counters and results list
@@ -53,7 +53,7 @@ def generate_report(input_file, output_report, output_tsv, transposon_json, runt
                     matched_rows.append(row)  # Keep the entire row
 
     except Exception as e:
-        print(f"Error processing input file: {e}")
+        print(f"Error processing input file: {e}", flush=True)
         return
 
     # Write the detailed report
@@ -80,16 +80,16 @@ def generate_report(input_file, output_report, output_tsv, transposon_json, runt
                 report.write("The analysis did not find any transposable proteins in the provided sequences.\n")
                 report.write("This indicates that your annotated proteins are likely accurate.\n")
 
-        print(f"Report generated successfully: {output_report}")
+        print(f"Report generated successfully: {output_report}", flush=True)
     except Exception as e:
-        print(f"Error writing report: {e}")
+        print(f"Error writing report: {e}", flush=True)
 
     # Write the filtered TSV file
     try:
         with open(output_tsv, 'w', newline='') as tsv_file:
             writer = csv.writer(tsv_file, delimiter='\t')
             writer.writerows(matched_rows)
-        print(f"Filtered TSV file generated successfully: {output_tsv}")
+        print(f"Filtered TSV file generated successfully: {output_tsv}", flush=True)
     except Exception as e:
-        print(f"Error writing TSV file: {e}")
+        print(f"Error writing TSV file: {e}", flush=True)
     
