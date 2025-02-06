@@ -66,7 +66,7 @@ flymetothemoon93/gmfpid:v1.0 \
 --threads 4
   ```
 **Recommendation:**  
-  **By default (without `--threads`), the program runs with `--threads 1`, which is the fastest option.**  
+  By default (without `--threads`), the program runs with `--threads 1`, which is **the fastest option**.  
   Using multiple threads may not improve performance due to HMMER's I/O and CPU constraints.
 
 ### 💻 Customizing the Transposon Database (`transposon_interpro.json`)
@@ -74,7 +74,7 @@ By default, GMFPIdentifier uses **`/app/database/transposon_interpro.json`**, wh
 
 If you want to **modify or extend the database**, you can provide your own JSON file.
 
-**How to Use a Custom JSON File in Docker**
+**How to Use a Custom JSON File in Docker**:
 ```bash
 docker run \
 -v $(pwd)/your_input_folder:/app/input_data \
