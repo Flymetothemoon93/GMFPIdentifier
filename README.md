@@ -22,7 +22,7 @@ To run GMFPIdentifier, use the following command:
 docker run \
 -v $(pwd)/your_input_folder:/app/input_data \
 -v $(pwd)/your_output_folder:/app/output_data \
-flymetothemoon93/gmfpid:latest \
+flymetothemoon93/gmfpid:v1.0 \
 --input /app/input_data/your_input.fasta \
 --output /app/output_data/results
 ```
@@ -35,6 +35,7 @@ flymetothemoon93/gmfpid:latest \
 | `-v $(pwd)/your_output_folder:/app/output_data` | Mounts your **output folder** to retrieve results. |
 | `--input /app/input_data/your_input.fasta` | Specifies the **input PROTEIN FASTA** file. |
 | `--output /app/output_data/results` | Defines the **directory** where results will be saved. |
+| `--threads 4 (optional)` | Number of CPU threads to use. Default is 1 **(fastest)**. |
 
 ### 📌 Example Usage
 
@@ -44,12 +45,30 @@ If you have an input FASTA file called `Athaliana_with_Gypsy.fa` stored in your 
 docker run \
 -v $(pwd)/testdata:/app/input_data \
 -v $(pwd)/testoutput:/app/output_data \
-flymetothemoon93/gmfpid:latest \
+flymetothemoon93/gmfpid:v1.0 \
 --input /app/input_data/Athaliana_with_Gypsy.fa \
 --output /app/output_data/Athaliana_results
 ```
 
 After the process completes, results will be stored in `testoutput/Athaliana_results`. 🎯
+
+---
+
+## ⚡ About `--threads`
+- You can **optionally specify `--threads`** to set the number of CPU threads.
+- **Example** (using 4 threads):
+  ```bash
+  docker run \
+  -v $(pwd)/testdata:/app/input_data \
+  -v $(pwd)/testoutput:/app/output_data \
+  flymetothemoon93/gmfpid:v1.0 \
+  --input /app/input_data/Athaliana_with_Gypsy.fa \
+  --output /app/output_data/Athaliana_results \
+  --threads 4
+  ```
+- **⚠️ Recommendation:**  
+  **By default (without `--threads`), the program runs with `--threads 1`, which is the fastest option.**  
+  Using multiple threads may not improve performance due to HMMER's I/O and CPU constraints.
 
 ---
 
