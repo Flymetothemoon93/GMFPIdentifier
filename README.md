@@ -220,6 +220,12 @@ This command will:
 - Generate a detailed report summarizing the analysis, including runtime, detected transposon-related proteins, and their descriptions.
 - Output an InterProScan TSV file containing domain annotations for all detected transposable element proteins.
 
+### ⚙️ **Optional Arguments**
+| Parameter            | Description |
+|----------------------|-------------|
+| `--json` *(optional)* | Path to a **custom transposon database JSON file**. If not provided, the default `/app/database/transposon_interpro.json` will be used. |
+| `--threads` *(optional)* | Number of CPU threads to use. **Default: 1** (recommended for stability). You can increase it for faster processing, but performance gain depends on HMMER & InterProScan constraints. |
+
 ---
 
 ## 🔧 Troubleshooting
