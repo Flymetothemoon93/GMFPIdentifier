@@ -48,9 +48,9 @@ def filter_hmmer_results(hmmer_results_file, output_file, e_value_threshold=1e-5
                     outfile.write(line)  # Write the filtered line to the output file
                     filtered_count += 1
 
-        print(f"Filtered results saved to {output_file}. Total filtered entries: {filtered_count}")
+        print(f"Filtered results saved to {output_file}. Total filtered entries: {filtered_count}", flush=True)
 
     except FileNotFoundError:
-        print(f"Error: The file {hmmer_results_file} was not found.")
+        print(f"Error: The file {hmmer_results_file} was not found.", flush=True)
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"An error occurred: {e}", flush=True)
