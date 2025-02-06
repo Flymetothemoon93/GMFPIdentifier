@@ -53,6 +53,8 @@ flymetothemoon93/gmfpid:v1.0 \
 
 After the process completes, results will be stored in `testoutput/Athaliana_results`. 🎯
 
+---
+
 ### ⚡ About `--threads`
 You can **optionally specify `--threads`** to set the number of CPU threads.
 **Example** (using 4 threads):
@@ -65,9 +67,11 @@ flymetothemoon93/gmfpid:v1.0 \
 --output /app/output_data/Athaliana_results \
 --threads 4
   ```
-**Recommendation:**  
+**⚠️Recommendation:**  
   By default (without `--threads`), the program runs with `--threads 1`, which is **the fastest option**.  
   Using multiple threads may not improve performance due to HMMER's I/O and CPU constraints.
+
+---
 
 ### 💻 Customizing the Transposon Database (`transposon_interpro.json`)
 By default, GMFPIdentifier uses **`/app/database/transposon_interpro.json`**, which includes known transposon-related proteins.
