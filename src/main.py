@@ -41,42 +41,42 @@ def main(input_fasta, output_dir, threads, json_path=None):
     try:
         # Step 1: Run HMMER analysis
         hmmer_output = os.path.join(output_dir, "hmmer_results.txt")
-        print("Step 1: Running HMMER analysis...")
+        print("Step 1: Running HMMER analysis...", flush=True)
         run_hmmer(input_fasta, hmmer_output, threads)
-        print(f"HMMER results saved to: {hmmer_output}")
+        print(f"HMMER results saved to: {hmmer_output}", flush=True)
 
         # Step 2: Filter HMMER results
         filtered_hmmer_output = os.path.join(output_dir, "filtered_hmmer_results.txt")
-        print("\nStep 2: Filtering HMMER results...")
+        print("\nStep 2: Filtering HMMER results...", flush=True)
         filter_hmmer_results(hmmer_output, filtered_hmmer_output)
-        print(f"Filtered HMMER results saved to: {filtered_hmmer_output}")
+        print(f"Filtered HMMER results saved to: {filtered_hmmer_output}", flush=True)
 
         # Step 3: Extract protein sequences for InterProScan
         filtered_fasta_output = os.path.join(output_dir, "filtered_sequences.fasta")
-        print("\nStep 3: Extracting protein sequences...")
+        print("\nStep 3: Extracting protein sequences...", flush=True)
         extract_sequences(filtered_hmmer_output, input_fasta, filtered_fasta_output)
-        print(f"Filtered sequences saved to: {filtered_fasta_output}")
+        print(f"Filtered sequences saved to: {filtered_fasta_output}", flush=True)
 
         # Step 4: Run InterProScan
         interproscan_output = os.path.join(output_dir, "interproscan_results.tsv")
-        print("\nStep 4: Running InterProScan...")
+        print("\nStep 4: Running InterProScan...", flush=True)
         run_interproscan(filtered_fasta_output, interproscan_output, threads)
-        print(f"InterProScan results saved to: {interproscan_output}")
+        print(f"InterProScan results saved to: {interproscan_output}", flush=True)
 
         # Step 5: Generate final report and filtered TSV
         report_output = os.path.join(output_dir, "GMFPIdentifier_report.txt")
         tsv_output = os.path.join(output_dir, "GMFPIdentifier_results.tsv")
-        print("\nStep 5: Generating final report and TSV...")
+        print("\nStep 5: Generating final report and TSV...", flush=True)
 
         # Calculate runtime and pass it to the report generation function
         end_time = time.time()
         runtime_seconds = end_time - start_time
 
         generate_report(interproscan_output, report_output, tsv_output, transposon_json, runtime_seconds)
-        print(f"Final report saved to: {report_output}")
-        print(f"Filtered TSV saved to: {tsv_output}")
+        print(f"Final report saved to: {report_output}", flush=True)
+        print(f"Filtered TSV saved to: {tsv_output}", flush=True)
 
-        print("\nPipeline completed successfully. Results are saved in the specified output directory.")
+        print("\nPipeline completed successfully. Results are saved in the specified output directory.", flush=True)
 
     except Exception as e:
         print(f"Error: {e}")
