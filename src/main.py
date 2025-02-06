@@ -62,11 +62,10 @@ def main(input_fasta, output_dir, threads, json_path=None):
         print(f"InterProScan results saved to: {interproscan_output}", flush=True)
 
         # Step 5: Generate final report and filtered TSV
-        print(f"Using transposon JSON file: {transposon_json}", flush=True)
         report_output = os.path.join(output_dir, "GMFPIdentifier_report.txt")
         tsv_output = os.path.join(output_dir, "GMFPIdentifier_results.tsv")
         print("\nStep 5: Generating final report and TSV...", flush=True)
-
+        print(f"Using transposon JSON file: {transposon_json}", flush=True)
         # Calculate runtime and pass it to the report generation function
         end_time = time.time()
         runtime_seconds = end_time - start_time
