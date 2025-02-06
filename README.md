@@ -52,9 +52,7 @@ flymetothemoon93/gmfpid:v1.0 \
 
 After the process completes, results will be stored in `testoutput/Athaliana_results`. 🎯
 
----
-
-## ⚡ About `--threads`
+### ⚡ About `--threads`
 - You can **optionally specify `--threads`** to set the number of CPU threads.
 - **Example** (using 4 threads):
   ```bash
