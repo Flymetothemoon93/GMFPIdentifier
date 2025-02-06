@@ -53,7 +53,7 @@ def main(input_fasta, output_dir, threads, json_path=None):
         filtered_fasta_output = os.path.join(output_dir, "filtered_sequences.fasta")
         print("\nStep 3: Extracting protein sequences...", flush=True)
         extract_sequences(filtered_hmmer_output, input_fasta, filtered_fasta_output)
-        print(f"Filtered sequences saved to: {filtered_fasta_output}", flush=True)
+        print(f"Extracted sequences saved to: {filtered_fasta_output}", flush=True)
 
         # Step 4: Run InterProScan
         interproscan_output = os.path.join(output_dir, "interproscan_results.tsv")
