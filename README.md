@@ -69,9 +69,7 @@ flymetothemoon93/gmfpid:v1.0 \
   **By default (without `--threads`), the program runs with `--threads 1`, which is the fastest option.**  
   Using multiple threads may not improve performance due to HMMER's I/O and CPU constraints.
 
-
----
-### 🛠 Customizing the Transposon Database (`transposon_interpro.json`)
+### 💻 Customizing the Transposon Database (`transposon_interpro.json`)
 By default, GMFPIdentifier uses **`/app/database/transposon_interpro.json`**, which includes known transposon-related proteins.
 
 If you want to **modify or extend the database**, you can provide your own JSON file.
