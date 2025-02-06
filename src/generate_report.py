@@ -80,7 +80,7 @@ def generate_report(input_file, output_report, output_tsv, transposon_json, runt
                 report.write("The analysis did not find any transposable proteins in the provided sequences.\n")
                 report.write("This indicates that your annotated proteins are likely accurate.\n")
 
-        print(f"Report generated successfully: {output_report}", flush=True)
+        # print(f"Report generated successfully: {output_report}", flush=True)
     except Exception as e:
         print(f"Error writing report: {e}", flush=True)
 
@@ -89,7 +89,7 @@ def generate_report(input_file, output_report, output_tsv, transposon_json, runt
         with open(output_tsv, 'w', newline='') as tsv_file:
             writer = csv.writer(tsv_file, delimiter='\t')
             writer.writerows(matched_rows)
-        print(f"Filtered TSV file generated successfully: {output_tsv}", flush=True)
+        # print(f"Filtered TSV file generated successfully: {output_tsv}", flush=True)
     except Exception as e:
         print(f"Error writing TSV file: {e}", flush=True)
     
