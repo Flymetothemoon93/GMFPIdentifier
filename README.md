@@ -223,7 +223,7 @@ This command will:
 ### ⚙️ **Optional Arguments**
 | Parameter            | Description |
 |----------------------|-------------|
-| `--json` *(optional)* | Path to a **custom transposon database JSON file**. If not provided, the default `/app/database/transposon_interpro.json` will be used. |
+| `--json` *(optional)* | Path to a **custom transposon database JSON file**. If not provided, the default `/database/transposon_interpro.json` will be used. |
 | `--threads` *(optional)* | Number of CPU threads to use. **Default: 1** (recommended for stability). You can increase it for faster processing, but performance gain depends on HMMER & InterProScan constraints. |
 
 ---
