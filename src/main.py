@@ -31,8 +31,6 @@ def main(input_fasta, output_dir, threads, json_path=None):
     if not os.path.exists(transposon_json):
         raise FileNotFoundError(f"Transposon JSON file not found: {transposon_json}")
 
-    print(f"Using transposon JSON file: {transposon_json}")
-
     # Ensure INTERPROSCAN_PATH is set
     interproscan_path = os.environ.get("INTERPROSCAN_PATH")
     if not interproscan_path:
@@ -64,6 +62,7 @@ def main(input_fasta, output_dir, threads, json_path=None):
         print(f"InterProScan results saved to: {interproscan_output}", flush=True)
 
         # Step 5: Generate final report and filtered TSV
+        print(f"Using transposon JSON file: {transposon_json}", flush=True)
         report_output = os.path.join(output_dir, "GMFPIdentifier_report.txt")
         tsv_output = os.path.join(output_dir, "GMFPIdentifier_results.tsv")
         print("\nStep 5: Generating final report and TSV...", flush=True)
