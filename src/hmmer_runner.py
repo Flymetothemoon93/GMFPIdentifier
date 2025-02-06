@@ -76,4 +76,4 @@ def run_hmmer(protein_sequences, output_file, threads=1):
     if os.path.exists(temp_output_file):
         os.remove(temp_output_file)
     
-    print(f"HMMER process for {protein_sequences} finished. Results saved to {output_file}", flush=True)
+    # print(f"HMMER process for {protein_sequences} finished. Results saved to {output_file}", flush=True)
