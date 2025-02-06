@@ -53,18 +53,18 @@ flymetothemoon93/gmfpid:v1.0 \
 After the process completes, results will be stored in `testoutput/Athaliana_results`. 🎯
 
 ### ⚡ About `--threads`
-- You can **optionally specify `--threads`** to set the number of CPU threads.
-- **Example** (using 4 threads):
-  ```bash
-  docker run \
-  -v $(pwd)/testdata:/app/input_data \
-  -v $(pwd)/testoutput:/app/output_data \
-  flymetothemoon93/gmfpid:v1.0 \
-  --input /app/input_data/Athaliana_with_Gypsy.fa \
-  --output /app/output_data/Athaliana_results \
-  --threads 4
+You can **optionally specify `--threads`** to set the number of CPU threads.
+**Example** (using 4 threads):
+```bash
+docker run \
+-v $(pwd)/testdata:/app/input_data \
+-v $(pwd)/testoutput:/app/output_data \
+flymetothemoon93/gmfpid:v1.0 \
+--input /app/input_data/Athaliana_with_Gypsy.fa \
+--output /app/output_data/Athaliana_results \
+--threads 4
   ```
-- **⚠️ Recommendation:**  
+**⚠️ Recommendation:**  
   **By default (without `--threads`), the program runs with `--threads 1`, which is the fastest option.**  
   Using multiple threads may not improve performance due to HMMER's I/O and CPU constraints.
 
