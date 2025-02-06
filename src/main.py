@@ -10,6 +10,9 @@ def main(input_fasta, output_dir, threads, json_path=None):
     """
     Main function to run the GMFPIdentifier pipeline.
     """
+    # Start timing the pipeline
+    start_time = time.time()
+    
     # Get the current script directory
     current_dir = os.path.dirname(os.path.abspath(__file__))
 
