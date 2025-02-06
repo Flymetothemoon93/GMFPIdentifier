@@ -78,8 +78,7 @@ def run_interproscan(input_fasta, output_file, threads=1):
             "-f", "tsv",
             "-goterms",
             "-iprlookup",
-            "--cpu", str(threads),
-            "--disable-precalc"
+            "--cpu", str(threads)
         ]
 
         # Step 4: Run InterProScan
