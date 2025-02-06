@@ -6,28 +6,35 @@ from extract_fasta_sequences import extract_sequences
 from interproscan_runner import run_interproscan
 from generate_report import generate_report
 
-def main(input_fasta, output_dir, threads):
+def main(input_fasta, output_dir, threads, json_path=None):
     """
-    Main function to run the pipeline.
+    Main function to run the GMFPIdentifier pipeline.
     """
-    # Start timing the pipeline
-    start_time = time.time()
-
-    # Get the current directory of this script
+    # Get the current script directory
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    
-    # Define fixed path for the transposon InterPro JSON file
-    transposon_json = os.path.join(current_dir, "../database/transposon_interpro.json")
 
-    # Check if JSON file exists
+    # Determine the path for the transposon InterPro JSON file
+    if json_path:
+        transposon_json = json_path
+    else:
+        # Use the default JSON file based on the environment
+        docker_json_path = "/app/database/transposon_interpro.json"  # For Docker
+        local_json_path = os.path.join(current_dir, "../database/transposon_interpro.json")  # For local execution
+
+        # Prioritize the local JSON file if it exists; otherwise, use the Docker path
+        transposon_json = local_json_path if os.path.exists(local_json_path) else docker_json_path
+
+    # Verify that the JSON file exists
     if not os.path.exists(transposon_json):
         raise FileNotFoundError(f"Transposon JSON file not found: {transposon_json}")
 
-    # Check if INTERPROSCAN_PATH environment variable is set
+    print(f"Using transposon JSON file: {transposon_json}")
+
+    # Ensure INTERPROSCAN_PATH is set
     interproscan_path = os.environ.get("INTERPROSCAN_PATH")
     if not interproscan_path:
         raise EnvironmentError("Please set the INTERPROSCAN_PATH environment variable to the InterProScan installation path.")
-    
+
     try:
         # Step 1: Run HMMER analysis
         hmmer_output = os.path.join(output_dir, "hmmer_results.txt")
@@ -67,7 +74,7 @@ def main(input_fasta, output_dir, threads):
         print(f"Filtered TSV saved to: {tsv_output}")
 
         print("\nPipeline completed successfully. Results are saved in the specified output directory.")
-    
+
     except Exception as e:
         print(f"Error: {e}")
         raise
@@ -78,11 +85,11 @@ if __name__ == "__main__":
     parser.add_argument("--input", required=True, help="Path to the input protein sequences in FASTA format.")
     parser.add_argument("--output", required=True, help="Path to the output directory.")
     parser.add_argument("--threads", type=int, default=1, help="Number of CPU threads to use (default: 1).")
+    parser.add_argument("--json", required=False, help="Path to a custom transposon JSON file (optional).")
     args = parser.parse_args()
 
     # Ensure the output directory exists
     if not os.path.exists(args.output):
         os.makedirs(args.output)
 
-    main(args.input, args.output, args.threads)
-
+    main(args.input, args.output, args.threads, args.json)
