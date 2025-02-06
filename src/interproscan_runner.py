@@ -87,7 +87,7 @@ def run_interproscan(input_fasta, output_file, threads=1):
 
         # Step 5: Restore original IDs
         restore_fasta_ids(temp_output, id_mapping, original_ids, output_file)
-        print(f"Results saved to {output_file}", flush=True)
+        # print(f"Results saved to {output_file}", flush=True)
 
         # Cleanup
         os.remove(truncated_fasta)
