@@ -39,7 +39,7 @@ def extract_sequences(filtered_results_file, protein_sequences_file, output_fast
             if not matched:
                 print("No matching sequences found in the original FASTA file.", flush=True)
 
-        print(f"Extracted sequences saved to {output_fasta}", flush=True)
+        # print(f"Extracted sequences saved to {output_fasta}", flush=True)
 
     except FileNotFoundError:
         print(f"Error: The file {filtered_results_file} or {protein_sequences_file} was not found.", flush=True)
