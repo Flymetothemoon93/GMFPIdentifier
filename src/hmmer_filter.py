@@ -1,16 +1,6 @@
 def filter_hmmer_results(hmmer_results_file, output_file, e_value_threshold=1e-5, score_threshold=50, coverage_threshold=0.5):
     """
     Parses HMMER output file and filters based on e-value, score, and coverage relative to HMM model length.
-
-    Parameters:
-    - hmmer_results_file (str): Path to the HMMER output file.
-    - output_file (str): Path to the filtered output file.
-    - e_value_threshold (float): E-value threshold for filtering. Default is 1e-5.
-    - score_threshold (float): Score threshold for filtering. Default is 50.
-    - coverage_threshold (float): Coverage threshold for filtering, relative to HMM model length. Default is 0.5 (50%).
-
-    Returns:
-    - None: Saves the filtered results to output_file.
     """
     try:
         filtered_count = 0  # Counter for the number of filtered entries
