@@ -51,9 +51,6 @@ def run_interproscan(input_fasta, output_file, threads=1):
     - input_fasta (str): Path to the input FASTA file containing sequences for InterProScan.
     - output_file (str): Path where the InterProScan results should be saved.
     - threads (int): Number of CPU threads to use (default: 1).
-
-    Returns:
-    - None
     """
     try:
         print(f"Running InterProScan with ID truncation using {threads} threads...", flush=True)
