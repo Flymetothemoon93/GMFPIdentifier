@@ -3,15 +3,6 @@ from Bio import SeqIO
 def extract_sequences(filtered_results_file, protein_sequences_file, output_fasta):
     """
     Extracts protein sequences from the filtered HMMER results and creates a FASTA file.
-    Removes any '*' characters from the extracted sequences.
-
-    Parameters:
-    - filtered_results_file (str): Path to the filtered results file from filter_hmmer_results.py.
-    - protein_sequences_file (str): Path to the original protein sequences in FASTA format.
-    - output_fasta (str): Path where the output FASTA file should be saved.
-
-    Returns:
-    - None: Writes the selected sequences to output_fasta.
     """
     try:
         # Load filtered sequence IDs from the third column in the results file
