@@ -4,7 +4,7 @@ GMFPIdentifier (Gene Model False Positives Identifier) is a bioinformatics tool 
 
 ---
 
-## 🚀 How to Use
+## 🔍 How to Use
 
 You can easily run GMFPIdentifier using Docker **without manually installing dependencies**.
 
