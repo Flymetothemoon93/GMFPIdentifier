@@ -5,10 +5,6 @@ from Bio import SeqIO
 def truncate_fasta_ids(input_fasta, truncated_fasta):
     """
     Truncate sequence IDs in a FASTA file to ensure compatibility with InterProScan.
-
-    Returns:
-    - id_mapping (dict): Mapping of original IDs to truncated IDs.
-    - original_ids (set): Set of original IDs that exist in the input FASTA.
     """
     id_mapping = {}
     original_ids = set()
@@ -25,12 +21,6 @@ def truncate_fasta_ids(input_fasta, truncated_fasta):
 def restore_fasta_ids(output_tsv, id_mapping, original_ids, restored_tsv):
     """
     Restore original sequence IDs in the InterProScan results, ensuring only valid sequences are mapped back.
-
-    Parameters:
-    - output_tsv (str): Path to the InterProScan results with truncated IDs.
-    - id_mapping (dict): Mapping of truncated IDs to original IDs.
-    - original_ids (set): Set of original IDs from the input FASTA.
-    - restored_tsv (str): Path to save the results with restored IDs.
     """
     with open(output_tsv, 'r') as input_handle, open(restored_tsv, 'w') as output_handle:
         for line in input_handle:
@@ -46,11 +36,6 @@ def restore_fasta_ids(output_tsv, id_mapping, original_ids, restored_tsv):
 def run_interproscan(input_fasta, output_file, threads=1):
     """
     Runs InterProScan on a given FASTA file and saves the results to an output file.
-
-    Parameters:
-    - input_fasta (str): Path to the input FASTA file containing sequences for InterProScan.
-    - output_file (str): Path where the InterProScan results should be saved.
-    - threads (int): Number of CPU threads to use (default: 1).
     """
     try:
         print(f"Running InterProScan with ID truncation using {threads} threads...", flush=True)
