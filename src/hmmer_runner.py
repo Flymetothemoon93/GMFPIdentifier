@@ -4,14 +4,6 @@ import os
 def run_hmmer(protein_sequences, output_file, threads=1):
     """
     Runs the HMMER tool to scan the provided protein sequences using HMM models from GyDB.
-
-    Parameters:
-    - protein_sequences (str): Path to the input protein sequences in FASTA format.
-    - output_file (str): Path where the hmmer_results.txt should be saved.
-    - threads (int): Number of CPU threads to use (default: 1).
-
-    Returns:
-    - None: Outputs the results to a file in the specified output path.
     """
     
     print(f"HMMER process started with {threads} threads...", flush=True)
