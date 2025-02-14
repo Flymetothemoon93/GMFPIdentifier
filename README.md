@@ -27,7 +27,7 @@ flymetothemoon93/gmfpid:v1.2 \
 --output /app/output_data/results
 ```
 
-### 🔹 Explanation:
+### 🔖 Explanation:
 
 | Parameter | Description |
 |-----------|------------|
