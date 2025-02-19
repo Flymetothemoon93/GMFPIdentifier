@@ -26,10 +26,9 @@ def generate_report(input_file, output_report, output_tsv, transposon_json, runt
         print(f"Error loading transposon JSON file: {e}", flush=True)
         return
 
-    # Initialize counters and results list
+    # Initialize counters and results dictionary
     total_proteins = 0
-    matched_proteins = []
-    matched_rows = []
+    protein_dict = {}  # Dictionary to store results per protein
 
     # Process the input InterProScan TSV file
     try:
@@ -45,12 +44,14 @@ def generate_report(input_file, output_report, output_tsv, transposon_json, runt
                 interpro_id = row[11]  # 12th column: InterPro ID
 
                 if interpro_id in transposon_interpro_ids:
-                    matched_proteins.append({
-                        "protein": protein_name,
-                        "interpro_id": interpro_id,
-                        "description": transposon_interpro_ids[interpro_id]
-                    })
-                    matched_rows.append(row)  # Keep the entire row
+                    description = transposon_interpro_ids[interpro_id]
+
+                    if protein_name not in protein_dict:
+                        protein_dict[protein_name] = []
+
+                    # Only add if this InterPro ID is not already listed for this protein
+                    if (interpro_id, description) not in protein_dict[protein_name]:
+                        protein_dict[protein_name].append((interpro_id, description))
 
     except Exception as e:
         print(f"Error processing input file: {e}", flush=True)
@@ -66,21 +67,24 @@ def generate_report(input_file, output_report, output_tsv, transposon_json, runt
             report.write(f"Pipeline Runtime: {formatted_runtime}\n\n")
             report.write("Results:\n")
 
-            if matched_proteins:
+            if protein_dict:
                 report.write("The following proteins were identified as transposable proteins:\n\n")
-                for i, protein in enumerate(matched_proteins, 1):
-                    report.write(f"{i}. Protein: {protein['protein']}\n")
-                    report.write(f"   InterPro ID: {protein['interpro_id']}\n")
-                    report.write(f"   Description: {protein['description']}\n\n")
+                for i, (protein, domains) in enumerate(protein_dict.items(), 1):
+                    report.write(f"{i}. Protein: {protein}\n")
+                    for interpro_id, description in domains:
+                        report.write(f"   - InterPro ID: {interpro_id}\n")
+                        report.write(f"     Description: {description}\n")
+                    report.write("\n")
+
                 report.write("Summary:\n")
-                report.write(f"A total of {len(matched_proteins)} transposable proteins were detected.\n")
+                report.write(f"A total of {len(protein_dict)} unique transposable proteins were detected.\n")
             else:
                 report.write("No transposable proteins were detected in the input data.\n\n")
                 report.write("Summary:\n")
                 report.write("The analysis did not find any transposable proteins in the provided sequences.\n")
                 report.write("This indicates that your annotated proteins are likely accurate.\n")
 
-        # print(f"Report generated successfully: {output_report}", flush=True)
+        print(f"Report generated successfully: {output_report}", flush=True)
     except Exception as e:
         print(f"Error writing report: {e}", flush=True)
 
@@ -88,8 +92,9 @@ def generate_report(input_file, output_report, output_tsv, transposon_json, runt
     try:
         with open(output_tsv, 'w', newline='') as tsv_file:
             writer = csv.writer(tsv_file, delimiter='\t')
-            writer.writerows(matched_rows)
-        # print(f"Filtered TSV file generated successfully: {output_tsv}", flush=True)
+            for protein, domains in protein_dict.items():
+                for interpro_id, description in domains:
+                    writer.writerow([protein, interpro_id, description])
+        print(f"Filtered TSV file generated successfully: {output_tsv}", flush=True)
     except Exception as e:
         print(f"Error writing TSV file: {e}", flush=True)
-    
