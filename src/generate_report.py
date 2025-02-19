@@ -29,6 +29,7 @@ def generate_report(input_file, output_report, output_tsv, transposon_json, runt
     # Initialize counters and results dictionary
     total_proteins = 0
     protein_dict = {}  # Dictionary to store results per protein
+    matched_rows = []  # List to store all matching rows for the TSV output
 
     # Process the input InterProScan TSV file
     try:
@@ -52,6 +53,9 @@ def generate_report(input_file, output_report, output_tsv, transposon_json, runt
                     # Only add if this InterPro ID is not already listed for this protein
                     if (interpro_id, description) not in protein_dict[protein_name]:
                         protein_dict[protein_name].append((interpro_id, description))
+
+                    # Store the full row for TSV output
+                    matched_rows.append(row)
 
     except Exception as e:
         print(f"Error processing input file: {e}", flush=True)
@@ -92,9 +96,7 @@ def generate_report(input_file, output_report, output_tsv, transposon_json, runt
     try:
         with open(output_tsv, 'w', newline='') as tsv_file:
             writer = csv.writer(tsv_file, delimiter='\t')
-            for protein, domains in protein_dict.items():
-                for interpro_id, description in domains:
-                    writer.writerow([protein, interpro_id, description])
+            writer.writerows(matched_rows) 
         print(f"Filtered TSV file generated successfully: {output_tsv}", flush=True)
     except Exception as e:
         print(f"Error writing TSV file: {e}", flush=True)
