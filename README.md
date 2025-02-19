@@ -11,7 +11,7 @@ You can easily run GMFPIdentifier using Docker **without manually installing dep
 ### 📥 1. Pull the Docker Image
 
 ```bash
-docker pull flymetothemoon93/gmfpid:v1.2
+docker pull flymetothemoon93/gmfpid:v1.3
 ```
 
 ### 🐳 2. Run the Container
@@ -22,7 +22,7 @@ To run GMFPIdentifier, use the following command:
 docker run \
 -v $(pwd)/your_input_folder:/app/input_data \
 -v $(pwd)/your_output_folder:/app/output_data \
-flymetothemoon93/gmfpid:v1.2 \
+flymetothemoon93/gmfpid:v1.3 \
 --input /app/input_data/your_input.fasta \
 --output /app/output_data/results
 ```
@@ -46,7 +46,7 @@ If you have an input FASTA file called `Athaliana_with_Gypsy.fa` stored in your 
 docker run \
 -v $(pwd)/testdata:/app/input_data \
 -v $(pwd)/testoutput:/app/output_data \
-flymetothemoon93/gmfpid:v1.2 \
+flymetothemoon93/gmfpid:v1.3 \
 --input /app/input_data/Athaliana_with_Gypsy.fa \
 --output /app/output_data/Athaliana_results
 ```
@@ -62,7 +62,7 @@ You can **optionally specify `--threads`** to set the number of CPU threads.
 docker run \
 -v $(pwd)/testdata:/app/input_data \
 -v $(pwd)/testoutput:/app/output_data \
-flymetothemoon93/gmfpid:v1.2 \
+flymetothemoon93/gmfpid:v1.3 \
 --input /app/input_data/Athaliana_with_Gypsy.fa \
 --output /app/output_data/Athaliana_results \
 --threads 4
@@ -84,7 +84,7 @@ docker run \
 -v $(pwd)/your_input_folder:/app/input_data \
 -v $(pwd)/your_output_folder:/app/output_data \
 -v $(pwd)/your_custom_json:/app/database \
-flymetothemoon93/gmfpid:v1.2 \
+flymetothemoon93/gmfpid:v1.3 \
 --input /app/input_data/your_input.fasta \
 --output /app/output_data/results \
 --json /app/database/custom_transposon_interpro.json
