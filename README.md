@@ -4,17 +4,17 @@ GMFPIdentifier (Gene Model False Positives Identifier) is a bioinformatics tool 
 
 ---
 
-## 🔍 How to Use
+## How to Use
 
 You can easily run GMFPIdentifier using Docker **without manually installing dependencies**.
 
-### 📥 1. Pull the Docker Image
+### 1. Pull the Docker Image
 
 ```bash
 docker pull flymetothemoon93/gmfpid:v1.3
 ```
 
-### 🐳 2. Run the Container
+### 2. Run the Container
 
 To run GMFPIdentifier, use the following command:
 
@@ -27,7 +27,7 @@ flymetothemoon93/gmfpid:v1.3 \
 --output /app/output_data/results
 ```
 
-### 🔖 Explanation:
+### Explanation:
 
 | Parameter | Description |
 |-----------|------------|
@@ -38,7 +38,7 @@ flymetothemoon93/gmfpid:v1.3 \
 | `--threads 4 (optional)` | Number of CPU threads to use. Default is 1 **(fastest)**. |
 | `--json /app/database/custom_transposon_interpro.json (optional)` | Use a **custom transposon database JSON file** instead of the default. |
 
-### 📌 Example Usage
+### Example Usage
 
 If you have an input FASTA file called `Athaliana_with_Gypsy.fa` stored in your `testdata` directory, you can run:
 
@@ -55,7 +55,7 @@ After the process completes, results will be stored in `testoutput/Athaliana_res
 
 ---
 
-### ⚡ About `--threads`
+### About `--threads`
 You can **optionally specify `--threads`** to set the number of CPU threads.
 **Example** (using 4 threads):
 ```bash
@@ -73,7 +73,7 @@ flymetothemoon93/gmfpid:v1.3 \
 
 ---
 
-### 💻 Customizing the Transposon Database (`transposon_interpro.json`)
+### Customizing the Transposon Database (`transposon_interpro.json`)
 By default, GMFPIdentifier uses **`/app/database/transposon_interpro.json`**, which includes known transposon-related proteins.
 
 If you want to **modify or extend the database**, you can provide your own JSON file.
@@ -94,7 +94,7 @@ This will **replace the default JSON** with your **custom** transposon detection
 
 ---
 
-## 🔬 Features
+## Features
 - Identify transposable element proteins from protein sequences using HMMER and GyDB profiles.
 - Filter and extract high-confidence TE protein sequences.
 - Validate HMMER results with InterProScan to eliminate false positives.
@@ -102,7 +102,7 @@ This will **replace the default JSON** with your **custom** transposon detection
 
 ---
 
-## 📦 Prerequisites (For Manual Installation)
+## Prerequisites (For Manual Installation)
 If you prefer to run GMFPIdentifier **without Docker**, you'll need:
 
 - Python (3.6 or later, with required packages in `requirements.txt`)
@@ -111,22 +111,22 @@ If you prefer to run GMFPIdentifier **without Docker**, you'll need:
 
 ---
 
-## 🛠️ Installation (Manual)
+## Installation (Manual)
 
-### 1️⃣ Clone the Repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/Flymetothemoon93/GMFPIdentifier.git
 cd GMFPIdentifier
 ```
 
-### 2️⃣ Install Required Python Packages
+### 2. Install Required Python Packages
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3️⃣ Install HMMER
+### 3. Install HMMER
 
 Download the latest HMMER version:
 
@@ -163,7 +163,7 @@ Verify installation:
 hmmscan -h
 ```
 
-### 4️⃣ Download and Install InterProScan
+### 4. Download and Install InterProScan
 
 Download InterProScan from the official site. You can use the following command to download version 5.70-102.0:
 
@@ -198,7 +198,7 @@ source ~/.bashrc
 
 ---
 
-## 🔍 How to Use (Manual Execution)
+## How to Use (Manual Execution)
 
 Run GMFPIdentifier with your input files:
 
@@ -206,7 +206,7 @@ Run GMFPIdentifier with your input files:
 python src/main.py --input your_protein_sequences.fasta --output results
 ```
 
-### 📌 Example Usage
+### Example Usage
 
 ```bash
 python src/main.py --input testdata/Athaliana_with_Gypsy.fa --output testoutput/Athaliana_with_Gypsy
@@ -220,7 +220,7 @@ This command will:
 - Generate a detailed report summarizing the analysis, including runtime, detected transposon-related proteins, and their descriptions.
 - Output an InterProScan TSV file containing domain annotations for all detected transposable element proteins.
 
-### ⚙️ **Optional Arguments**
+### **Optional Arguments**
 | Parameter            | Description |
 |----------------------|-------------|
 | `--json` *(optional)* | Path to a **custom transposon database JSON file**. If not provided, the default `/database/transposon_interpro.json` will be used. |
@@ -228,19 +228,19 @@ This command will:
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
-### 🛠️ InterProScan Not Found
+### InterProScan Not Found
 Ensure that the `INTERPROSCAN_PATH` environment variable is correctly set to the full path of your InterProScan installation:
 
 ```bash
 echo $INTERPROSCAN_PATH
 ```
 
-### 🔐 Permissions
+### Permissions
 If you encounter **permissions issues**, ensure that you have execution permissions for the `interproscan.sh` script.
 
 ---
 
-## 📜 License
+## License
 This project is open-source and licensed under the **MIT License**. See the `LICENSE` file for details.
